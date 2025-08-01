@@ -16,9 +16,13 @@ from datetime import datetime, timedelta
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-_db_stats_cache = {
-    "timestamp": None,  
-    "primary_size": 0   
+_db_stats_cache_primary = {
+    "timestamp": None,
+    "primary_size": 0
+}
+_db_stats_cache_secondary = {
+    "timestamp": None,
+    "primary_size": 0
 }
 
 client = AsyncIOMotorClient(DATABASE_URI)
@@ -56,42 +60,46 @@ class Media2(Document):
         indexes = ('$file_name', )
         collection_name = COLLECTION_NAME
 
-async def check_db_size(db):
+async def check_db_size(db, cache):
     try:
         now = datetime.utcnow()
-        cache_stale_by_time = _db_stats_cache["timestamp"] is None or \
-                             (now - _db_stats_cache["timestamp"] > timedelta(minutes=10))
-        refresh_if_size_threshold = _db_stats_cache["primary_size"] >= 10.0
-        if not cache_stale_by_time and not refresh_if_size_threshold:
-            return _db_stats_cache["primary_size"]
-        stats = await db.command("dbstats")
-        db_size = stats["dataSize"]
+        cache_stale = cache["timestamp"] is None or \
+                      (now - cache["timestamp"] > timedelta(minutes=10))
+        if not cache_stale:
+            return cache["primary_size"]
+        dbstats = await db.command("dbStats")
+        db_size = dbstats['dataSize'] + dbstats['indexSize']
         db_size_mb = db_size / (1024 * 1024) 
-        _db_stats_cache["primary_size"] = db_size_mb
-        _db_stats_cache["timestamp"] = now
+        cache["primary_size"] = db_size_mb
+        cache["timestamp"] = now
         return db_size_mb
     except Exception as e:
         print(f"Error Checking Database Size: {e}")
-        return 0
+        return 0 
     
 async def save_file(media):
     file_id, file_ref = unpack_new_file_id(media.file_id)
     file_name = re.sub(r"@\w+|(_|\-|\.|\+|\#|\$|%|\^|&|\*|\(|\)|!|~|`|,|;|:|\"|\'|\?|/|<|>|\[|\]|\{|\}|=|\||\\)", " ", str(media.file_name))
     file_name = re.sub(r"\s+", " ", file_name)    
+    
+    primary_db_size = await check_db_size(db, _db_stats_cache_primary)
+    print(f"Primary DB Size - {primary_db_size} And Multiple Db - {MULTIPLE_DB}")
+    use_secondary = False
     saveMedia = Media
-    if MULTIPLE_DB:
-        exists = await Media.count_documents({'_id': file_id}, limit=1)
-        if exists:
-            print(f'{file_name} Is Already Saved In Primary Database!')
+    exists_in_primary = await Media.count_documents({'file_id': file_id}, limit=1)
+    if exists_in_primary:
+        print(f'{file_name} Is Already Saved In Primary Database!')
+        return False, 0
+        
+    if MULTIPLE_DB and primary_db_size >= DB_CHANGE_LIMIT:
+        print("Primary Database Is Low On Space. Switching To Secondary DB.")
+        saveMedia = Media2
+        use_secondary = True
+        exists_in_secondary = await Media2.count_documents({'file_id': file_id}, limit=1)
+        if exists_in_secondary:
+            print(f'{file_name} Is Already Saved In Secondary Database!')
             return False, 0
-        try:
-            primary_db_size = await check_db_size(db)
-            if primary_db_size >= 407:
-                print("Primary Database Is Low On Space. Switching To Secondary DB.")
-                saveMedia = Media2
-        except Exception as e:
-            print(f"Error Checking Primary Db Size: {e}")
-            saveMedia = Media
+            
     try:
         file = saveMedia(
             file_id=file_id,
@@ -109,10 +117,10 @@ async def save_file(media):
         try:
             await file.commit()
         except DuplicateKeyError:
-            print(f'{file_name} Is Already Saved In {"Secondary" if saveMedia==Media2 else "Primary"} Database')
+            print(f'{file_name} Is Already Saved In {"Secondary" if use_secondary else "Primary"} Database')
             return False, 0
         else:
-            print(f'{file_name} Saved Successfully In {"Secondary" if saveMedia==Media2 else "Primary"} Database')
+            print(f'{file_name} Saved Successfully In {"Secondary" if use_secondary else "Primary"} Database')
             return True, 1
             
 

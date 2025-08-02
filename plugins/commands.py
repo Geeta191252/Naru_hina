@@ -268,7 +268,7 @@ async def start(client, message):
             file_id = file.file_id
             files_ = await get_file_details(file_id)
             files1 = files_[0]
-            title = ' '.join(filter(lambda x: not x.startswith('[') and not x.startswith('@') and not x.startswith('www.'), files1.file_name.split()))
+            title = clean_filename(files1.file_name) 
             size = get_size(files1.file_size)
             f_caption = files1.caption
             settings = await get_settings(int(grp_id))
@@ -280,7 +280,7 @@ async def start(client, message):
                     logger.exception(e)
                     f_caption = f_caption
             if f_caption is None:
-                f_caption = f"{' '.join(filter(lambda x: not x.startswith('[') and not x.startswith('@') and not x.startswith('www.'), files1.file_name.split()))}"
+                f_caption = clean_filename(files1.file_name) 
             if STREAM_MODE:
                 btn = [
                     [InlineKeyboardButton('𝖦𝖾𝗇𝖾𝗋𝖺𝗍𝖾 𝖲𝗍𝗋𝖾𝗆𝗂𝗇𝗀 𝖫𝗂𝗇𝗄', callback_data=f'streamfile:{file_id}')],
@@ -329,7 +329,7 @@ async def start(client, message):
 
             filetype = msg.media
             file = getattr(msg, filetype.value)
-            title = ' '.join(filter(lambda x: not x.startswith('[') and not x.startswith('@') and not x.startswith('www.'), file.file_name.split()))
+            title = clean_filename(file.file_name)              
             size=get_size(file.file_size)
             f_caption = f"<code>{title}</code>"
             settings = await get_settings(int(grp_id))
@@ -350,7 +350,7 @@ async def start(client, message):
         return await message.reply('ɴᴏ ꜱᴜᴄʜ ꜰɪʟᴇ ᴇxɪꜱᴛꜱ !')
     
     files = files_[0]
-    title = ' '.join(filter(lambda x: not x.startswith('[') and not x.startswith('@') and not x.startswith('www.'), files.file_name.split()))
+    title = clean_filename(files.file_name)
     size = get_size(files.file_size)
     f_caption = files.caption
     settings = await get_settings(int(grp_id))            
@@ -363,7 +363,7 @@ async def start(client, message):
             f_caption = f_caption
 
     if f_caption is None:
-        f_caption = ' '.join(filter(lambda x: not x.startswith('[') and not x.startswith('@') and not x.startswith('www.'), files.file_name.split()))
+        f_caption = clean_filename(files.file_name)
     if STREAM_MODE:
         btn = [
             [InlineKeyboardButton('𝖦𝖾𝗇𝖾𝗋𝖺𝗍𝖾 𝖲𝗍𝗋𝖾𝗆𝗂𝗇𝗀 𝖫𝗂𝗇𝗄', callback_data=f'streamfile:{file_id}')],

@@ -1413,9 +1413,13 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 InlineKeyboardButton('🚫 ᴄʟᴏꜱᴇ 🚫', callback_data='close_data')
             ]]
             reply_markup = InlineKeyboardMarkup(btn)
-            await query.message.reply_photo(
-                photo=(SUBSCRIPTION),
-                caption=script.PREMIUM_TEXT.format(query.from_user.mention),
+            await client.edit_message_media(
+                query.message.chat.id, 
+                query.message.id, 
+                InputMediaPhoto(SUBSCRIPTION)
+	        ) 
+            await query.message.edit_text(
+                text=script.PREMIUM_TEXT.format(query.from_user.mention),
                 reply_markup=reply_markup,
                 parse_mode=enums.ParseMode.HTML
             ) 
@@ -1430,9 +1434,13 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 InlineKeyboardButton('🚫 ᴄʟᴏꜱᴇ 🚫', callback_data='close_data')
             ]]
             reply_markup = InlineKeyboardMarkup(btn)
-            await query.message.reply_photo(
-                photo=(SUBSCRIPTION),
-                caption=script.PREMIUM_UPI_TEXT.format(query.from_user.mention),
+            await client.edit_message_media(
+                query.message.chat.id, 
+                query.message.id, 
+                InputMediaPhoto(SUBSCRIPTION)
+	        ) 
+            await query.message.edit_text(
+                text=script.PREMIUM_UPI_TEXT.format(query.from_user.mention),
                 reply_markup=reply_markup,
                 parse_mode=enums.ParseMode.HTML
             ) 
@@ -1460,7 +1468,6 @@ async def cb_handler(client: Client, query: CallbackQuery):
 	    )
         except Exception as e:
             print(e)
-
 
     elif query.data == "earn":
         try:
@@ -1910,7 +1917,7 @@ async def auto_filter(client, msg, spoll=False):
             search = search.replace("-", " ")
             search = search.replace(":","")
             search = re.sub(r'\s+', ' ', search).strip()
-            m=await message.reply_text(f'<b>Wᴀɪᴛ {message.from_user.mention} Sᴇᴀʀᴄʜɪɴɢ Yᴏᴜʀ Qᴜᴇʀʏ :<i>{search}...</i></b>', reply_to_message_id=message.id)
+            m=await message.reply_text(f'<b>Wᴀɪᴛ {message.from_user.mention} Sᴇᴀʀᴄʜɪɴɢ Yᴏᴜʀ Qᴜᴇʀʏ : <i>{search}...</i></b>', reply_to_message_id=message.id)
             files, offset, total_results = await get_search_results(message.chat.id ,search, offset=0, filter=True)
             settings = await get_settings(message.chat.id)
             if not files:

@@ -262,7 +262,16 @@ def clean_filename(file_name):
     file_name = re.sub(r'http\S+', '', re.sub(r'@\w+|#\w+', '', file_name))
     file_name = re.sub(r"(_|\-|\.|\+)", " ", file_name)
     file_name = re.sub(r"[(){}\[\]:;'\-!]", "", file_name)
+    for word in BAD_WORDS:
+        file_name = re.sub(r'\b' + re.escape(word) + r'\b', '', file_name, flags=re.IGNORECASE)
+    file_name = ' '.join(file_name.split())
     return file_name
+
+async def replace_words(string):
+    ignorewords = IGNORE_WORDS
+    pattern = r'\b(?:{})\b'.format('|'.join(map(re.escape, ignorewords)))
+    formatted = re.sub(pattern, '', string)
+    return formatted.replace("-", " ")
 
 def split_list(l, n):
     for i in range(0, len(l), n):

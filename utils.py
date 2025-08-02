@@ -337,9 +337,10 @@ def extract_request_content(message_text):
     return message_text.strip()
  
 def clean_filename(file_name):
-    file_name = re.sub(r'http\S+', '', re.sub(r'@\w+|#\w+', '', file_name))
-    file_name = re.sub(r"(_|\-|\.|\+)", " ", file_name)
-    file_name = re.sub(r"[(){}\[\]:;'\-!]", "", file_name)
+    file_name = re.sub(r'[_\-\.\+]', ' ', file_name)
+    file_name = re.sub(r'http\S+|@\w+|#\w+|\[\w+\]|www\.\S+', '', file_name)
+    file_name = re.sub(r'[^\x00-\x7F]+', '', file_name)
+    file_name = re.sub(r'[()\{\}\[\]:;\'\!\?\"]', '', file_name)
     for word in BAD_WORDS:
         file_name = re.sub(r'\b' + re.escape(word) + r'\b', '', file_name, flags=re.IGNORECASE)
     file_name = ' '.join(file_name.split())

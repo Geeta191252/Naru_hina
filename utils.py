@@ -267,6 +267,12 @@ def clean_filename(file_name):
     file_name = ' '.join(file_name.split())
     return file_name
 
+async def replace_words(string):
+    ignorewords = IGNORE_WORDS
+    pattern = r'\b(?:{})\b'.format('|'.join(map(re.escape, ignorewords)))
+    formatted = re.sub(pattern, '', string)
+    return formatted.replace("-", " ")
+
 def split_list(l, n):
     for i in range(0, len(l), n):
         yield l[i:i + n]  

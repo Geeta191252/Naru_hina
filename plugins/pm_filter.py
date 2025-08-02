@@ -1910,7 +1910,7 @@ async def auto_filter(client, msg, spoll=False):
             m=await message.reply_text(f'<b>Wᴀɪᴛ {message.from_user.mention} Sᴇᴀʀᴄʜɪɴɢ Yᴏᴜʀ Qᴜᴇʀʏ :<i>{search}...</i></b>', reply_to_message_id=message.id)
             find = search.split(" ")
             search = ""
-            removes = ["in","upload", "series", "full", "horror", "thriller", "mystery", "print", "file"]
+            removes = [word.lower() for word in IGNORE_WORDS] 
             for x in find:
                 if x in removes:
                     continue

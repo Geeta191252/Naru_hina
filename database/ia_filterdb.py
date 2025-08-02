@@ -83,7 +83,6 @@ async def save_file(media):
     file_name = re.sub(r"\s+", " ", file_name)    
     
     primary_db_size = await check_db_size(db, _db_stats_cache_primary)
-    print(f"Primary DB Size - {primary_db_size} And Multiple Db - {MULTIPLE_DB}")
     use_secondary = False
     saveMedia = Media
     exists_in_primary = await Media.count_documents({'file_id': file_id}, limit=1)
@@ -246,7 +245,7 @@ async def siletxbotz_fetch_media(limit: int) -> List[dict]:
     try:
         if MULTIPLE_DB:
             db_size = await check_db_size(Media)
-            if db_size > 407:
+            if db_size > DB_CHANGE_LIMIT:
                 cursor = Media2.find().sort("$natural", -1).limit(limit)
                 files = await cursor.to_list(length=limit)
                 return files

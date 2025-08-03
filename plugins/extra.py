@@ -4,11 +4,8 @@ from pyrogram import Client, filters
 import platform
 import os
 import shutil
-import logging
 from pyrogram.types import BotCommand
 from info import ADMINS, Bot_cmds
-
-logging.basicConfig(level=logging.INFO)
 
 CMD = ["/", "."]  
 
@@ -108,4 +105,3 @@ async def set_commands(client, message):
     await asyncio.sleep(119)  
     await bot_set.delete()
     await message.delete()
-

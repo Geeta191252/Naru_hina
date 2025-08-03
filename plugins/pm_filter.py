@@ -19,16 +19,13 @@ from utils import *
 from fuzzywuzzy import process
 from database.users_chats_db import db
 from database.ia_filterdb import Media, Media2, get_file_details, get_search_results, get_bad_files
-import logging
+from logging import LOGGER
 from urllib.parse import quote_plus
 from Lucia.util.file_properties import get_name, get_hash, get_media_file_size
 from database.topdb import silentdb
 import requests
 import string
 import tracemalloc
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.ERROR)
 
 tracemalloc.start()
 
@@ -89,7 +86,7 @@ async def pm_text(bot, message):
              reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("📝 ꜱᴇᴀʀᴄʜ ʜᴇʀᴇ ", url=GRP_LNK)]])
             )
     except Exception as e:
-        print(f"An error occurred: {str(e)}")
+        LOGGER.error(f"An error occurred: {str(e)}")
 
 
 @Client.on_callback_query(filters.regex(r"^reffff"))
@@ -257,7 +254,7 @@ async def next_page(bot, query):
                 pass
         await query.answer()
     except Exception as e:
-        print(f"Error In Next Funtion - {e}")
+        LOGGER.error(f"Error In Next Funtion - {e}")
 
 @Client.on_callback_query(filters.regex(r"^qualities#"))
 async def qualities_cb_handler(client: Client, query: CallbackQuery):
@@ -299,7 +296,7 @@ async def qualities_cb_handler(client: Client, query: CallbackQuery):
         btn.append([InlineKeyboardButton(text="↭ ʙᴀᴄᴋ ᴛᴏ ꜰɪʟᴇs ↭", callback_data=f"fq#homepage#{key}#{offset}")])
         await query.edit_message_reply_markup(InlineKeyboardMarkup(btn))
     except Exception as e:
-        print(f"Error In Quality Callback Handler - {e}")
+        LOGGER.error(f"Error In Quality Callback Handler - {e}")
 
 @Client.on_callback_query(filters.regex(r"^fq#"))
 async def filter_qualities_cb_handler(client: Client, query: CallbackQuery):
@@ -407,7 +404,7 @@ async def filter_qualities_cb_handler(client: Client, query: CallbackQuery):
                 pass
         await query.answer()
     except Exception as e:
-        print(f"Error In Quality - {e}")
+        LOGGER.error(f"Error In Quality - {e}")
 
 @Client.on_callback_query(filters.regex(r"^languages#"))
 async def languages_cb_handler(client: Client, query: CallbackQuery):
@@ -449,7 +446,7 @@ async def languages_cb_handler(client: Client, query: CallbackQuery):
         btn.append([InlineKeyboardButton(text="↭ ʙᴀᴄᴋ ᴛᴏ ꜰɪʟᴇs ↭", callback_data=f"fl#homepage#{key}#{offset}")])
         await query.edit_message_reply_markup(InlineKeyboardMarkup(btn))
     except Exception as e:
-        print(f"Error In Language Cb Handaler - {e}")
+        LOGGER.error(f"Error In Language Cb Handaler - {e}")
     
 
 @Client.on_callback_query(filters.regex(r"^fl#"))
@@ -557,7 +554,7 @@ async def filter_languages_cb_handler(client: Client, query: CallbackQuery):
                 pass
         await query.answer()
     except Exception as e:
-        print(f"Error In Language - {e}")
+        LOGGER.error(f"Error In Language - {e}")
         
 @Client.on_callback_query(filters.regex(r"^seasons#"))
 async def season_cb_handler(client: Client, query: CallbackQuery):
@@ -599,7 +596,7 @@ async def season_cb_handler(client: Client, query: CallbackQuery):
         btn.append([InlineKeyboardButton(text="↭ ʙᴀᴄᴋ ᴛᴏ ꜰɪʟᴇs ↭", callback_data=f"fl#homepage#{key}#{offset}")])
         await query.edit_message_reply_markup(InlineKeyboardMarkup(btn))
     except Exception as e:
-        print(f"Error In Season Cb Handaler - {e}")
+        LOGGER.error(f"Error In Season Cb Handaler - {e}")
 
 
 @Client.on_callback_query(filters.regex(r"^fs#"))
@@ -707,7 +704,7 @@ async def filter_season_cb_handler(client: Client, query: CallbackQuery):
                 pass
         await query.answer()
     except Exception as e:
-        print(f"Error In Season - {e}")
+        LOGGER.error(f"Error In Season - {e}")
 
 @Client.on_callback_query(filters.regex(r"^spol"))
 async def advantage_spoll_choker(bot, query):
@@ -782,7 +779,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
                                                        file_size='' if size is None else size,
                                                        file_caption='' if f_caption is None else f_caption)
             except Exception as e:
-                logger.exception(e)
+                LOGGER.error(e)
             f_caption = f_caption
         if f_caption is None:
             f_caption = f"{files.file_name}"
@@ -816,7 +813,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
                     if deleted % 20 == 0:
                         await query.message.edit_text(f"<b>ᴘʀᴏᴄᴇꜱꜱ ꜱᴛᴀʀᴛᴇᴅ ꜰᴏʀ ᴅᴇʟᴇᴛɪɴɢ ꜰɪʟᴇꜱ ꜰʀᴏᴍ ᴅʙ. ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ {str(deleted)} ꜰɪʟᴇꜱ ꜰʀᴏᴍ ᴅʙ ꜰᴏʀ ʏᴏᴜʀ ǫᴜᴇʀʏ {keyword} !\n\nᴘʟᴇᴀꜱᴇ ᴡᴀɪᴛ...</b>")
             except Exception as e:
-                print(f"Error In killfiledq -{e}")
+                LOGGER.error(f"Error In killfiledq -{e}")
                 await query.message.edit_text(f'Error: {e}')
             else:
                 await query.message.edit_text(f"<b>ᴘʀᴏᴄᴇꜱꜱ ᴄᴏᴍᴘʟᴇᴛᴇᴅ ꜰᴏʀ ꜰɪʟᴇ ᴅᴇʟᴇᴛᴀᴛɪᴏɴ !\n\nꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ {str(deleted)} ꜰɪʟᴇꜱ ꜰʀᴏᴍ ᴅʙ ꜰᴏʀ ʏᴏᴜʀ ǫᴜᴇʀʏ {keyword}.</b>")
@@ -1330,7 +1327,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 reply_markup=InlineKeyboardMarkup(btn)
 	    )                
         except Exception as e:
-            print(e)
+            LOGGER.error(e)
             await query.answer(f"⚠️ SOMETHING WENT WRONG \n\n{e}", show_alert=True)
             return
            
@@ -1378,7 +1375,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
                     reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("💸 ᴄʜᴇᴄᴋᴏᴜᴛ ᴘʀᴇᴍɪᴜᴍ ᴘʟᴀɴꜱ 💸", callback_data='seeplans')]]))
                 return    
         except Exception as e:
-            print(e)
+            LOGGER.error(e)
 
     elif query.data == "premium":
         try:
@@ -1402,7 +1399,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 parse_mode=enums.ParseMode.HTML
             )
         except Exception as e:
-            print(e)
+            LOGGER.error(e)
 
     elif query.data == "buy":
         try:
@@ -1424,7 +1421,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 parse_mode=enums.ParseMode.HTML
             ) 
         except Exception as e:
-            print(e)
+            LOGGER.error(e)
 
     elif query.data == "upi":
         try:
@@ -1445,7 +1442,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 parse_mode=enums.ParseMode.HTML
             ) 
         except Exception as e:
-            print(e)
+            LOGGER.error(e)
 
     elif query.data == "star":
         try:
@@ -1467,7 +1464,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 parse_mode=enums.ParseMode.HTML
 	    )
         except Exception as e:
-            print(e)
+            LOGGER.error(e)
 
     elif query.data == "earn":
         try:
@@ -1481,7 +1478,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 parse_mode=enums.ParseMode.HTML
             ) 
         except Exception as e:
-            print(e)
+            LOGGER.error(e)
                     
     elif query.data == "me":
         buttons = [[
@@ -2073,7 +2070,7 @@ async def auto_filter(client, msg, spoll=False):
                 await hmm.delete()
                 await message.delete()
         except Exception as e:
-            logger.exception(e)
+            LOGGER.error(e)
             fek = await m.edit_text(text=cap, reply_markup=InlineKeyboardMarkup(btn), parse_mode=enums.ParseMode.HTML)
             try:
                 if settings['auto_delete']:

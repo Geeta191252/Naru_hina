@@ -2,11 +2,11 @@ import os
 import re, sys
 import json
 import base64
-import logging
 import random
 import asyncio
 import time
 import pytz
+from logging import LOGGER
 from .pm_filter import auto_filter 
 from Script import script
 from datetime import datetime
@@ -20,9 +20,6 @@ from database.ia_filterdb import *
 from database.users_chats_db import db
 from info import *
 from utils import *
-
-logging.basicConfig(level=logging.ERROR)
-logger = logging.getLogger(__name__)
 
 TIMEZONE = "Asia/Kolkata"
 BATCH_FILES = {}
@@ -187,7 +184,7 @@ async def start(client, message):
                     try:
                         invite_link = await client.create_chat_invite_link(chnl, creates_join_request=True)
                     except ChatAdminRequired:
-                        print("Bot Ko AUTH_CHANNEL Per Admin Bana Bhai Pahile 🤧")
+                        LOGGER.error("Bot Ko AUTH_CHANNEL Per Admin Bana Bhai Pahile 🤧")
                         return
                     btn.append([
                         InlineKeyboardButton(f"⛔️ {i}. {channel_name} ⛔️", url=invite_link.invite_link)
@@ -196,7 +193,7 @@ async def start(client, message):
                     try:
                         invite_link = await client.create_chat_invite_link(chnl)
                     except ChatAdminRequired:
-                        print("Bot Ko AUTH_CHANNEL Per Admin Bana Bhai Pahile 🤧")
+                        LOGGER.error("Bot Ko AUTH_CHANNEL Per Admin Bana Bhai Pahile 🤧")
                         return
                     btn.append([
                         InlineKeyboardButton(f"⛔️ {i}. {channel_name} ⛔️", url=invite_link.invite_link)
@@ -216,7 +213,7 @@ async def start(client, message):
                 return
     except Exception as e:
         await log_error(client, f"Got Error In Force Subscription Function.\n\n Error - {e}")
-        print(f"Error In Fsub :- {e}")
+        LOGGER.error(f"Error In Fsub :- {e}")
         
     user_id = m.from_user.id
     if not await db.has_premium_access(user_id):
@@ -260,7 +257,7 @@ async def start(client, message):
                 return
         except Exception as e:
             await log_error(client, f"Got Error In Verification Funtion.\n\n Error - {e}")
-            print(f"Error In Verification - {e}")
+            LOGGER.error(f"Error In Verification - {e}")
             pass
     
     if data.startswith("allfiles"):
@@ -363,7 +360,7 @@ async def start(client, message):
         try:
             f_caption=SILENTX_CAPTION.format(file_name= '' if title is None else title, file_size='' if size is None else size, file_caption='' if f_caption is None else f_caption)
         except Exception as e:
-            logger.exception(e)
+            LOGGER.error(e)
             f_caption = f_caption
 
     if f_caption is None:
@@ -518,7 +515,7 @@ async def settings(client, message):
                     InlineKeyboardButton(text=silentx.title, callback_data=f"grp_pm#{silentx.id}")
                 ])
             except Exception as e:
-                print(f"Error In PM Settings Button - {e}")
+                LOGGER.error(f"Error In PM Settings Button - {e}")
                 pass
         await message.reply_text('Here Is Your Connected Groups.', reply_markup=InlineKeyboardMarkup(group_list))
                                                                                                             
@@ -975,7 +972,7 @@ async def all_settings(client, message):
         await asyncio.sleep(300)
         await dlt.delete()
     except Exception as e:
-        print(f"Error : {e}")
+        LOGGER.error(f"Error : {e}")
         await message.reply_text(f"Error: {e}")
 
 @Client.on_message(filters.command('group_cmd'))
@@ -1001,7 +998,7 @@ async def siletxbotz_list_movies(client, message):
         msg += "\n".join(f"<b>{i+1}. {m}</b>" for i, m in enumerate(movies))
         await message.reply(msg[:4096], parse_mode=ParseMode.HTML)
     except Exception as e:
-        logger.error(f"Error in siletxbotz_list_movies: {e}")
+        LOGGER.error(f"Error in siletxbotz_list_movies: {e}")
         await message.reply("An Error Occurred ☹️", parse_mode=ParseMode.HTML)
 
 @Client.on_message(filters.private & filters.command("series"))
@@ -1017,7 +1014,7 @@ async def siletxbotz_list_series(client, message):
             msg += f"<b>{i}. {title} - Season {season_list}</b>\n"
         await message.reply(msg[:4096], parse_mode=ParseMode.HTML)
     except Exception as e:
-        logger.error(f"Error in siletxbotz_list_series: {e}")
+        LOGGER.error(f"Error in siletxbotz_list_series: {e}")
         await message.reply("An Error Occurred ☹️", parse_mode=ParseMode.HTML)
 
 
@@ -1030,6 +1027,5 @@ async def reset_all_settings(client, message):
             quote=True
         )
     except Exception as e:
-        print(f"Error Processing Reset All Settings Command: {str(e)}")
-        await message.reply("<b>ᴇʀʀᴏʀ 🚫.oᴄᴄᴜʀʀᴇᴅ ᴡʜɪʟᴇ ᴅᴇʟᴇᴛɪɴɢ ɢʀᴏᴜᴘ ꜱᴇᴛᴛɪɴɢꜱ! ᴘʟᴇᴀꜱᴇ ᴛʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ.</b>", quote=True)
-        
+        LOGGER.error(f"Error Processing Reset All Settings Command: {str(e)}")
+        await message.reply("<b>ᴇʀʀᴏʀ 🚫.oᴄᴄᴜʀʀᴇᴅ ᴡʜɪʟᴇ ᴅᴇʟᴇᴛɪɴɢ ɢʀᴏᴜᴘ ꜱᴇᴛᴛɪɴɢꜱ! ᴘʟᴇᴀꜱᴇ ᴛʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ.</b>", quote=True)       

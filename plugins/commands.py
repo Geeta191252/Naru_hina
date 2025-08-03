@@ -6,7 +6,7 @@ import random
 import asyncio
 import time
 import pytz
-from logging import LOGGER
+from logging_helper import LOGGER
 from .pm_filter import auto_filter 
 from Script import script
 from datetime import datetime

@@ -1,4 +1,3 @@
-import logging
 import time
 import re
 import asyncio
@@ -10,9 +9,8 @@ from database.ia_filterdb import save_file
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from utils import temp, get_readable_time
 from math import ceil
+from logging import LOGGER
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 lock = asyncio.Lock()
 
@@ -74,7 +72,7 @@ async def send_for_index(bot, message):
     except (UsernameInvalid, UsernameNotModified):
         return await message.reply('Invalid Link specified.')
     except Exception as e:
-        logger.exception(e)
+        LOGGER.error(e)
         return await message.reply(f'Errors - {e}')
     try:
         k = await bot.get_messages(chat_id, last_msg_id)

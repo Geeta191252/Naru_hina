@@ -11,7 +11,7 @@ from info import *
 from utils import get_settings, save_group_settings
 from collections import defaultdict
 from datetime import datetime, timedelta
-from logging import LOGGER
+from logging_helper import LOGGER
 
 
 _db_stats_cache_primary = {

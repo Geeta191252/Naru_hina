@@ -2,7 +2,7 @@ import asyncio
 import aiohttp
 import traceback
 from info import *
-from logging import LOGGER
+from logging_helper import LOGGER
 
 
 async def ping_server():

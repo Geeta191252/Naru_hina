@@ -2,7 +2,7 @@ import datetime
 import time
 import os
 import asyncio
-from logging import LOGGER
+from logging_helper import LOGGER
 from pyrogram import Client, filters
 from pyrogram.errors.exceptions.bad_request_400 import MessageTooLong
 from pyrogram.errors import FloodWait

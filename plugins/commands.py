@@ -173,12 +173,16 @@ async def start(client, message):
         fsub_id_list = fsub_id_list + AUTH_REQ_CHANNEL if AUTH_REQ_CHANNEL else fsub_id_list
         
         if fsub_id_list:
-            fsub_ids = [] # for check duplicate
+            fsub_ids = []
             for chnl in fsub_id_list:
                 if chnl not in fsub_ids:
                     fsub_ids.append(chnl)
                 else:
                     continue
+                try:
+                    channel_name = (await client.get_chat(chnl)).title or f"Update Channel"
+                except Exception:
+                    channel_name = f"Update Channel"
                 if AUTH_REQ_CHANNEL and chnl in AUTH_REQ_CHANNEL and not await is_req_subscribed(client, message, chnl):
                     try:
                         invite_link = await client.create_chat_invite_link(chnl, creates_join_request=True)
@@ -186,7 +190,7 @@ async def start(client, message):
                         print("Bot Ko AUTH_CHANNEL Per Admin Bana Bhai Pahile 🤧")
                         return
                     btn.append([
-                        InlineKeyboardButton(f"⛔️ ᴊᴏɪɴ ɴᴏᴡ channel {i}⛔️", url=invite_link.invite_link)
+                        InlineKeyboardButton(f"⛔️ {i}. {channel_name} ⛔️", url=invite_link.invite_link)
                     ])
                 elif chnl not in AUTH_REQ_CHANNEL and not await is_subscribed(client, message.from_user.id, chnl):
                     try:
@@ -195,7 +199,7 @@ async def start(client, message):
                         print("Bot Ko AUTH_CHANNEL Per Admin Bana Bhai Pahile 🤧")
                         return
                     btn.append([
-                        InlineKeyboardButton(f"⛔️ ᴊᴏɪɴ ɴᴏᴡ channel {i}⛔️", url=invite_link.invite_link)
+                        InlineKeyboardButton(f"⛔️ {i}. {channel_name} ⛔️", url=invite_link.invite_link)
                     ])
                 i += 1
 

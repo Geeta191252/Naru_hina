@@ -3,7 +3,6 @@ import re
 import time
 import pytz
 import asyncio
-import logging
 import hashlib
 import random
 import string
@@ -13,9 +12,6 @@ from datetime import datetime, timedelta
 from pyrogram import Client, filters
 from database.users_chats_db import db
 from utils import *
-
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
 
 def hash_code(code):
     return hashlib.sha256(code.encode()).hexdigest()

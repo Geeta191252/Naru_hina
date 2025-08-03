@@ -4,8 +4,6 @@ import importlib
 from pathlib import Path
 from pyrogram import Client, idle, __version__
 from pyrogram.raw.all import layer
-import logging
-import logging.config
 import time
 import asyncio
 from datetime import date, datetime
@@ -23,13 +21,7 @@ from Lucia.Bot.clients import initialize_clients
 import pyrogram.utils
 from PIL import Image
 import threading, time, requests
-
-logging.config.fileConfig('logging.conf')
-logging.getLogger().setLevel(logging.INFO)
-logging.getLogger("pyrogram").setLevel(logging.ERROR)
-logging.getLogger("imdbpy").setLevel(logging.ERROR)
-logging.getLogger("aiohttp").setLevel(logging.ERROR)
-logging.getLogger("aiohttp.web").setLevel(logging.ERROR)
+from logging import LOGGER
 
 botStartTime = time.time()
 ppath = "plugins/*.py"
@@ -42,11 +34,11 @@ def ping_loop():
         try:
             r = requests.get(URL, timeout=10)
             if r.status_code == 200:
-                print("✅ Ping Successful")
+                LOGGER("✅ Ping Successful")
             else:
-                print(f"⚠️ Ping Failed: {r.status_code}")
+                LOGGER(f"⚠️ Ping Failed: {r.status_code}")
         except Exception as e:
-            print(f"❌ Exception During Ping: {e}")
+            LOGGER(f"❌ Exception During Ping: {e}")
         time.sleep(120)
 threading.Thread(target=ping_loop, daemon=True).start()
 
@@ -66,7 +58,7 @@ async def SilentXBotz_start():
             load = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(load)
             sys.modules["plugins." + plugin_name] = load
-            print("Import Plugins - " + plugin_name)
+            LOGGER("Import Plugins - " + plugin_name)
     if ON_HEROKU:
         asyncio.create_task(ping_server()) 
     b_users, b_chats = await db.get_banned()
@@ -75,9 +67,9 @@ async def SilentXBotz_start():
     await Media.ensure_indexes()
     if MULTIPLE_DB:
         await Media2.ensure_indexes()
-        print("Multiple Database Mode On. Now Files Will Be Save In Second DB If First DB Is Full")
+        LOGGER("Multiple Database Mode On. Now Files Will Be Save In Second DB If First DB Is Full")
     else:
-        print("Single DB Mode On ! Files Will Be Save In First Database")
+        LOGGER("Single DB Mode On ! Files Will Be Save In First Database")
     me = await SilentX.get_me()
     temp.ME = me.id
     temp.U_NAME = me.username
@@ -85,8 +77,8 @@ async def SilentXBotz_start():
     temp.B_LINK = me.mention
     SilentX.username = '@' + me.username
     SilentX.loop.create_task(check_expired_premium(SilentX))
-    logging.info(f"{me.first_name} with Pyrogram v{__version__} (Layer {layer}) started on {me.username}.")
-    logging.info(script.LOGO)
+    LOGGER(f"{me.first_name} with Pyrogram v{__version__} (Layer {layer}) started on {me.username}.")
+    LOGGER(script.LOGO)
     tz = pytz.timezone('Asia/Kolkata')
     today = date.today()
     now = datetime.now(tz)
@@ -108,4 +100,4 @@ if __name__ == '__main__':
     try:
         loop.run_until_complete(SilentXBotz_start())
     except KeyboardInterrupt:
-        logging.info('Service Stopped Bye 👋')
+        LOGGER('Service Stopped Bye 👋')

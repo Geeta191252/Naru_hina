@@ -1407,7 +1407,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 InlineKeyboardButton('ꜱᴛᴀʀ', callback_data='star'),
                 InlineKeyboardButton('ᴜᴘɪ', callback_data='upi')
             ],[
-                InlineKeyboardButton('🚫 ᴄʟᴏꜱᴇ 🚫', callback_data='close_data')
+                InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='premium')
             ]]
             reply_markup = InlineKeyboardMarkup(btn)
             await client.edit_message_media(
@@ -1428,7 +1428,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             btn = [[ 
                 InlineKeyboardButton('📱 ꜱᴇɴᴅ  ᴘᴀʏᴍᴇɴᴛ ꜱᴄʀᴇᴇɴꜱʜᴏᴛ', url=OWNER_LNK),
             ],[
-                InlineKeyboardButton('🚫 ᴄʟᴏꜱᴇ 🚫', callback_data='close_data')
+                InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='buy')
             ]]
             reply_markup = InlineKeyboardMarkup(btn)
             await client.edit_message_media(

@@ -12,7 +12,7 @@ import psutil
 import time
 from time import time
 from bot import botStartTime
-from logging import LOGGER
+from logging_helper import LOGGER
 
 
 """-----------------------------------------https://t.me/SilentXBotz--------------------------------------"""

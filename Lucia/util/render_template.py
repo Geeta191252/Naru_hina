@@ -5,7 +5,7 @@ from Lucia.util.human_readable import humanbytes
 from Lucia.util.file_properties import get_file_ids
 from Lucia.server.exceptions import InvalidHash
 import urllib.parse
-from logging import LOGGER
+from logging_helper import LOGGER
 import aiohttp
 
 async def render_page(id, secure_hash, src=None):

@@ -19,7 +19,7 @@ from utils import *
 from fuzzywuzzy import process
 from database.users_chats_db import db
 from database.ia_filterdb import Media, Media2, get_file_details, get_search_results, get_bad_files
-from logging import LOGGER
+from logging_helper import LOGGER
 from urllib.parse import quote_plus
 from Lucia.util.file_properties import get_name, get_hash, get_media_file_size
 from database.topdb import silentdb

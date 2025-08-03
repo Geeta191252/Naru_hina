@@ -3,7 +3,7 @@ from info import *
 from pyrogram import Client
 from Lucia.util.config_parser import TokenParser
 from . import multi_clients, work_loads, SilentX
-from logging import LOGGER
+from logging_helper import LOGGER
 
 
 async def initialize_clients():

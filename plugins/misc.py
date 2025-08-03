@@ -4,10 +4,6 @@ from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant, Media
 from utils import extract_user, get_file_id, get_poster
 from datetime import datetime
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
-import logging
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.ERROR)
 
 @Client.on_message(filters.command('id'))
 async def showid(client, message):

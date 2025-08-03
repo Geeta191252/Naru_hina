@@ -9,7 +9,7 @@ import hashlib
 import requests
 from info import *
 from utils import *
-from logging import LOGGER
+from logging_helper import LOGGER
 from typing import Optional
 from datetime import datetime
 from pyrogram import Client, filters

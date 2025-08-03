@@ -21,7 +21,7 @@ from Lucia.Bot.clients import initialize_clients
 import pyrogram.utils
 from PIL import Image
 import threading, time, requests
-from logging import LOGGER
+from logging_helper import LOGGER
 
 botStartTime = time.time()
 ppath = "plugins/*.py"

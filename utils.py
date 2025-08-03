@@ -1,4 +1,3 @@
-import logging
 from pyrogram.errors import InputUserDeactivated, UserNotParticipant, FloodWait, UserIsBlocked, PeerIdInvalid
 from info import  *
 from imdb import Cinemagoer 
@@ -22,9 +21,7 @@ import aiohttp
 from shortzy import Shortzy
 import http.client
 import json
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+from logging_helper import LOGGER
 
 BTN_URL_REGEX = re.compile(
     r"(\[([^\[]+?)\]\((buttonurl|buttonalert):(?:/{0,2})(.+?)(:same)?\))"
@@ -65,7 +62,7 @@ async def is_req_subscribed(bot, query, chnl):
     except UserNotParticipant:
         pass
     except Exception as e:
-        print(e)
+        LOGGER.error(e)
     return False
 
 async def is_subscribed(bot, user_id, channel_id):
@@ -98,15 +95,15 @@ async def users_broadcast(user_id, message, is_pin):
         return await users_broadcast(user_id, message)
     except InputUserDeactivated:
         await db.delete_user(int(user_id))
-        logging.info(f"{user_id}-Removed from Database, since deleted account.")
+        LOGGER.info(f"{user_id}-Removed from Database, since deleted account.")
         return False, "Deleted"
     except UserIsBlocked:
-        logging.info(f"{user_id} -Blocked the bot.")
+        LOGGER.info(f"{user_id} -Blocked the bot.")
         await db.delete_user(user_id)
         return False, "Blocked"
     except PeerIdInvalid:
         await db.delete_user(int(user_id))
-        logging.info(f"{user_id} - PeerIdInvalid")
+        LOGGER.info(f"{user_id} - PeerIdInvalid")
         return False, "Error"
     except Exception as e:
         return False, "Error"
@@ -137,7 +134,7 @@ async def junk_group(chat_id, message):
         return await junk_group(chat_id, message)
     except Exception as e:
         await db.delete_chat(int(chat_id))       
-        logging.info(f"{chat_id} - PeerIdInvalid")
+        LOGGER.info(f"{chat_id} - PeerIdInvalid")
         return False, "deleted", f'{e}\n\n'
     
 
@@ -151,14 +148,14 @@ async def clear_junk(user_id, message):
         return await clear_junk(user_id, message)
     except InputUserDeactivated:
         await db.delete_user(int(user_id))
-        logging.info(f"{user_id}-Removed from Database, since deleted account.")
+        LOGGER.info(f"{user_id}-Removed from Database, since deleted account.")
         return False, "Deleted"
     except UserIsBlocked:
-        logging.info(f"{user_id} -Blocked the bot.")
+        LOGGER.info(f"{user_id} -Blocked the bot.")
         return False, "Blocked"
     except PeerIdInvalid:
         await db.delete_user(int(user_id))
-        logging.info(f"{user_id} - PeerIdInvalid")
+        LOGGER.info(f"{user_id} - PeerIdInvalid")
         return False, "Error"
     except Exception as e:
         return False, "Error"
@@ -167,7 +164,7 @@ async def get_status(bot_id):
     try:
         return await db.movie_update_status(bot_id) or False  
     except Exception as e:
-        logging.error(f"Error in get_movie_update_status: {e}")
+        LOGGER.error(f"Error in get_movie_update_status: {e}")
         return False  
 
 async def get_poster(query, bulk=False, id=False, file=None):
@@ -574,7 +571,7 @@ async def log_error(client, error_message):
             text=f"<b>⚠️ Error Log:</b>\n<code>{error_message}</code>"
         )
     except Exception as e:
-        print(f"Failed to log error: {e}")
+        LOGGER.error(f"Failed to log error: {e}")
 
 
 def get_time(seconds):

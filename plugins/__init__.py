@@ -6,7 +6,7 @@ from database.users_chats_db import db
 from info import PREMIUM_LOGS, URL
 import aiohttp
 import asyncio
-from logging import LOGGER
+from logging_helper import LOGGER
 
 
 async def web_server():

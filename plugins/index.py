@@ -9,7 +9,7 @@ from database.ia_filterdb import save_file
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from utils import temp, get_readable_time
 from math import ceil
-from logging import LOGGER
+from logging_helper import LOGGER
 
 
 lock = asyncio.Lock()

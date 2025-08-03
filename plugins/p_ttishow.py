@@ -12,7 +12,8 @@ import psutil
 import time
 from time import time
 from bot import botStartTime
-import logging
+from logging import LOGGER
+
 
 """-----------------------------------------https://t.me/SilentXBotz--------------------------------------"""
 
@@ -52,7 +53,7 @@ async def save_group(bot, message):
         try:
             await db.connect_group(message.chat.id, message.from_user)
         except Exception as e:
-            logging.error(f"DB error connecting group: {e}")
+            LOGGER.error(f"DB error connecting group: {e}")
     else:
         settings = await get_settings(message.chat.id)
         if settings["welcome"]:
@@ -186,7 +187,7 @@ async def get_stats(bot, message):
             file2, get_size(db2_size), get_size(free2), uptime, ram, cpu, (int(file1) + int(file2))
         ))
     except Exception as e:
-        print(e)
+        LOGGER.error(e)
         
 
 @Client.on_message(filters.command('invite') & filters.user(ADMINS))

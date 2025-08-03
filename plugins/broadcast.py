@@ -2,7 +2,7 @@ import datetime
 import time
 import os
 import asyncio
-import logging
+from logging import LOGGER
 from pyrogram import Client, filters
 from pyrogram.errors.exceptions.bad_request_400 import MessageTooLong
 from pyrogram.errors import FloodWait
@@ -54,7 +54,7 @@ async def broadcast_users(bot, message):
             _, result = await users_broadcast(int(user["id"]), b_msg, is_pin)
             return result
         except Exception as e:
-            logging.exception(f"Error sending broadcast to {user['id']}")
+            LOGGER.error(f"Error sending broadcast to {user['id']}")
             return "Error"
 
     async with lock:

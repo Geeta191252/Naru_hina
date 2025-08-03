@@ -1,10 +1,10 @@
 from aiohttp import web
 import re
 import math
-import logging
 import secrets
 import time
 import mimetypes
+from logging import LOGGER
 from aiohttp.http_exceptions import BadStatusLine
 from Lucia.Bot import multi_clients, work_loads, SilentX
 from Lucia.server.exceptions import FIleNotFound, InvalidHash
@@ -13,7 +13,6 @@ from Lucia.util.custom_dl import ByteStreamer
 from Lucia.util.time_format import get_readable_time
 from Lucia.util.render_template import render_page
 from info import *
-
 
 routes = web.RouteTableDef()
 
@@ -41,7 +40,7 @@ async def stream_handler(request: web.Request):
     except (AttributeError, BadStatusLine, ConnectionResetError):
         pass
     except Exception as e:
-        logging.critical(e.with_traceback(None))
+        LOGGER.error(e.with_traceback(None))
         raise web.HTTPInternalServerError(text="An internal error has occurred.")
 
 @routes.get(r"/{path:\S+}", allow_head=True)
@@ -63,7 +62,7 @@ async def stream_handler(request: web.Request):
     except (AttributeError, BadStatusLine, ConnectionResetError):
         pass
     except Exception as e:
-        logging.critical(e.with_traceback(None))
+        LOGGER.error(e.with_traceback(None))
         raise web.HTTPInternalServerError(text="An internal error has occurred.")
 
 class_cache = {}
@@ -75,21 +74,21 @@ async def media_streamer(request: web.Request, id: int, secure_hash: str):
     faster_client = multi_clients[index]
     
     if MULTI_CLIENT:
-        logging.info(f"Client {index} is now serving {request.remote}")
+        LOGGER.info(f"Client {index} is now serving {request.remote}")
 
     if faster_client in class_cache:
         tg_connect = class_cache[faster_client]
-        logging.debug(f"Using cached ByteStreamer object for client {index}")
+        LOGGER.info(f"Using cached ByteStreamer object for client {index}")
     else:
-        logging.debug(f"Creating new ByteStreamer object for client {index}")
+        LOGGER.info(f"Creating new ByteStreamer object for client {index}")
         tg_connect = ByteStreamer(faster_client)
         class_cache[faster_client] = tg_connect
-    logging.debug("before calling get_file_properties")
+    LOGGER.info("before calling get_file_properties")
     file_id = await tg_connect.get_file_properties(id)
-    logging.debug("after calling get_file_properties")
+    LOGGER.info("after calling get_file_properties")
     
     if file_id.unique_id[:6] != secure_hash:
-        logging.debug(f"Invalid hash for message with ID {id}")
+        LOGGER.info(f"Invalid hash for message with ID {id}")
         raise InvalidHash
     
     file_size = file_id.file_size

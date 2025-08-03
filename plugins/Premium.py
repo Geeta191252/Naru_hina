@@ -9,6 +9,7 @@ import asyncio
 from pyrogram import Client, filters 
 from pyrogram.errors.exceptions.bad_request_400 import MessageTooLong
 from pyrogram.types import *
+from logging import LOGGER
 
 @Client.on_message(filters.command("remove_premium") & filters.user(ADMINS))
 async def remove_premium(client, message):
@@ -47,7 +48,7 @@ async def myplan(client, message):
             await message.reply_text(f"<b>ʜᴇʏ {user},\n\nʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴀ ᴀᴄᴛɪᴠᴇ ᴘʀᴇᴍɪᴜᴍ ᴘʟᴀɴ. ʙᴜʏ ᴏᴜʀ ꜱᴜʙꜱᴄʀɪᴘᴛɪᴏɴ ᴛᴏ ᴜꜱᴇ ᴘʀᴇᴍɪᴜᴍ ʙᴇɴᴇꜰɪᴛꜱ.<b>",
 	    reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("• ᴄʜᴇᴄᴋᴏᴜᴛ ᴘʀᴇᴍɪᴜᴍ ᴘʟᴀɴꜱ •", callback_data='buy')]]))
     except Exception as e:
-        print(e)
+        LOGGER.info(e)
 
 @Client.on_message(filters.command("get_premium") & filters.user(ADMINS))
 async def get_premium(client, message):
@@ -178,12 +179,12 @@ async def premium_button(client, callback_query: CallbackQuery):
                 )
                 await callback_query.answer()
             except Exception as e:
-                print(f"Error sending invoice: {e}")
+                LOGGER.error(f"Error sending invoice: {e}")
                 await callback_query.answer("🚫 Error Processing Your Payment. Try again.", show_alert=True)
         else:
             await callback_query.answer("⚠️ Invalid Premium Package.", show_alert=True)
     except Exception as e:
-        print(f"Error In buy_ - {e}")
+        LOGGER.error(f"Error In buy_ - {e}")
  
 @Client.on_pre_checkout_query()
 async def pre_checkout_handler(client, query: PreCheckoutQuery):
@@ -193,7 +194,7 @@ async def pre_checkout_handler(client, query: PreCheckoutQuery):
         else:
             await query.answer(success=False, error_message="⚠️ Invalid Purchase Type.", show_alert=True)
     except Exception as e:
-        print(f"Pre-checkout error: {e}")
+        LOGGER.error(f"Pre-checkout error: {e}")
         await query.answer(success=False, error_message="🚫 Unexpected Error Occurred." , show_alert=True)
 
 @Client.on_message(filters.successful_payment)
@@ -220,7 +221,7 @@ async def successful_premium_payment(client, message):
         else:
             await message.reply("⚠️ Invalid Premium Package.")
     except Exception as e:
-        print(f"Error Processing Premium Payment: {e}")
+        LOGGER.error(f"Error Processing Premium Payment: {e}")
         await message.reply("✅ Thank You For Your Payment! (Error Logging Details)")
 
 @Client.on_callback_query(filters.regex("cancel_star_premium"))

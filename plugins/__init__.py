@@ -6,9 +6,8 @@ from database.users_chats_db import db
 from info import PREMIUM_LOGS, URL
 import aiohttp
 import asyncio
-import logging
+from logging import LOGGER
 
-logging.basicConfig(level=logging.INFO)
 
 async def web_server():
     web_app = web.Application(client_max_size=30000000)
@@ -40,7 +39,7 @@ async def check_expired_premium(client):
                     f"<b>#Premium_Expired\nUser: {tg_user.mention}\nID: <code>{user_id}</code></b>"
                 )
             except Exception as e:
-                print(f"[EXPIRED ERROR] {e}")
+                LOGGER.error(f"[EXPIRED ERROR] {e}")
             await sleep(0.5)
         for label, delta in REMINDER_TIMES:
             reminder_users = await db.get_expiring_soon(label, delta)
@@ -57,6 +56,6 @@ async def check_expired_premium(client):
                         f"<b>#Reminder ({label})\nUser: {tg_user.mention}\nID: <code>{user_id}</code></b>"
                     )
                 except Exception as e:
-                    print(f"[REMINDER ERROR] {e}")
+                    LOGGER.error(f"[REMINDER ERROR] {e}")
                 await sleep(0.5)
         await sleep(1)

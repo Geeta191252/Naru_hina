@@ -34,16 +34,16 @@ def ping_loop():
         try:
             r = requests.get(URL, timeout=10)
             if r.status_code == 200:
-                LOGGER("✅ Ping Successful")
+                LOGGER.info("✅ Ping Successful")
             else:
-                LOGGER(f"⚠️ Ping Failed: {r.status_code}")
+                LOGGER.error(f"⚠️ Ping Failed: {r.status_code}")
         except Exception as e:
-            LOGGER(f"❌ Exception During Ping: {e}")
+            LOGGER.error(f"❌ Exception During Ping: {e}")
         time.sleep(120)
 threading.Thread(target=ping_loop, daemon=True).start()
 
 async def SilentXBotz_start():
-    print('Initalizing Your Bot!')
+    LOGGER.info('Initalizing Your Bot!')
     await SilentX.start()
     bot_info = await SilentX.get_me()
     SilentX.username = bot_info.username
@@ -58,7 +58,7 @@ async def SilentXBotz_start():
             load = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(load)
             sys.modules["plugins." + plugin_name] = load
-            LOGGER("Import Plugins - " + plugin_name)
+            LOGGER.info("Import Plugins - " + plugin_name)
     if ON_HEROKU:
         asyncio.create_task(ping_server()) 
     b_users, b_chats = await db.get_banned()
@@ -67,9 +67,9 @@ async def SilentXBotz_start():
     await Media.ensure_indexes()
     if MULTIPLE_DB:
         await Media2.ensure_indexes()
-        LOGGER("Multiple Database Mode On. Now Files Will Be Save In Second DB If First DB Is Full")
+        LOGGER.info("Multiple Database Mode On. Now Files Will Be Save In Second DB If First DB Is Full")
     else:
-        LOGGER("Single DB Mode On ! Files Will Be Save In First Database")
+        LOGGER.info("Single DB Mode On ! Files Will Be Save In First Database")
     me = await SilentX.get_me()
     temp.ME = me.id
     temp.U_NAME = me.username
@@ -77,8 +77,8 @@ async def SilentXBotz_start():
     temp.B_LINK = me.mention
     SilentX.username = '@' + me.username
     SilentX.loop.create_task(check_expired_premium(SilentX))
-    LOGGER(f"{me.first_name} with Pyrogram v{__version__} (Layer {layer}) started on {me.username}.")
-    LOGGER(script.LOGO)
+    LOGGER.info(f"{me.first_name} with Pyrogram v{__version__} (Layer {layer}) started on {me.username}.")
+    LOGGER.info(script.LOGO)
     tz = pytz.timezone('Asia/Kolkata')
     today = date.today()
     now = datetime.now(tz)
@@ -100,4 +100,4 @@ if __name__ == '__main__':
     try:
         loop.run_until_complete(SilentXBotz_start())
     except KeyboardInterrupt:
-        LOGGER('Service Stopped Bye 👋')
+        LOGGER.info('Service Stopped Bye 👋')

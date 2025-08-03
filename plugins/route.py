@@ -4,7 +4,7 @@ import math
 import secrets
 import time
 import mimetypes
-from logging import LOGGER
+from logging_helper import LOGGER
 from aiohttp.http_exceptions import BadStatusLine
 from Lucia.Bot import multi_clients, work_loads, SilentX
 from Lucia.server.exceptions import FIleNotFound, InvalidHash

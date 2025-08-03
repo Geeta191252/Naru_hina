@@ -1,6 +1,6 @@
 import math
 import asyncio
-from logging import LOGGER
+from logging_helper import LOGGER
 from info import *
 from typing import Dict, Union
 from Lucia.Bot import work_loads

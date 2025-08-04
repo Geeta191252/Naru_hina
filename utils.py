@@ -332,15 +332,17 @@ def extract_request_content(message_text):
     if match:
         return match.group(1).strip()
     return message_text.strip()
- 
+
 def clean_filename(file_name):
+    prohibitedWords = BAD_WORDS
+    _regex = re.compile('|'.join(map(re.escape, prohibitedWords)))
+    file_name = _regex.sub("", file_name)
+
     file_name = re.sub(r'[_\-\.\+]', ' ', file_name)
     file_name = re.sub(r'http\S+|@\w+|#\w+|\[\w+\]|www\.\S+', '', file_name)
     file_name = re.sub(r'[^\x00-\x7F]+', '', file_name)
     file_name = re.sub(r'[()\{\}\[\]:;\'\!\?\"]', '', file_name)
-    for word in BAD_WORDS:
-        file_name = re.sub(r'\b' + re.escape(word) + r'\b', '', file_name, flags=re.IGNORECASE)
-    file_name = ' '.join(file_name.split())
+
     return file_name
 
 async def replace_words(string):

@@ -38,11 +38,16 @@ SPELL_CHECK = {}
 
 @Client.on_message(filters.group & filters.text & filters.incoming)
 async def give_filter(client, message):
+    bot_id = client.me.id
     if EMOJI_MODE:
         try:
             await message.react(emoji=random.choice(REACTIONS))
         except Exception:
             pass
+    maintenance_mode = await db.get_maintenance_status(bot_id)
+    if maintenance_mode and message.from_user.id not in ADMINS:
+        await message.reply_text(f"ɪ ᴀᴍ ᴄᴜʀʀᴇɴᴛʟʏ ᴜɴᴅᴇʀ ᴍᴀɪɴᴛᴇɴᴀɴᴄᴇ 🛠️. ɪ ᴡɪʟʟ ʙᴇ ʙᴀᴄᴋ ꜱᴏᴏɴ 🔜", disable_web_page_preview=True)
+        return
     await silentdb.update_top_messages(message.from_user.id, message.text)
     if message.chat.id != SUPPORT_CHAT_ID:
         settings = await get_settings(message.chat.id)
@@ -73,6 +78,10 @@ async def pm_text(bot, message):
             await message.react(emoji=random.choice(REACTIONS))
         except Exception:
             pass
+    maintenance_mode = await db.get_maintenance_status(bot_id)
+    if maintenance_mode and message.from_user.id not in ADMINS:
+        await message.reply_text(f"ɪ ᴀᴍ ᴄᴜʀʀᴇɴᴛʟʏ ᴜɴᴅᴇʀ ᴍᴀɪɴᴛᴇɴᴀɴᴄᴇ 🛠️. ɪ ᴡɪʟʟ ʙᴇ ʙᴀᴄᴋ ꜱᴏᴏɴ 🔜", disable_web_page_preview=True)
+        return
     if content.startswith(("/", "#")):
         return  
     try:

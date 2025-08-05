@@ -1,10 +1,11 @@
 version: 2
 updates:
+  # Python requirements
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "daily"
-      time: "19:46"
+      time: "19:47:16"
       timezone: "UTC"
     ignore:
       - dependency-name: "pyrofork"
@@ -16,4 +17,3 @@ updates:
     commit-message:
       prefix: "chore(deps)"
       include: "scope"
-    security-updates: true

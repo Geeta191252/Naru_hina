@@ -77,9 +77,8 @@ async def check_db_size(db, cache):
     
 async def save_file(media):
     file_id, file_ref = unpack_new_file_id(media.file_id)
-    file_name = re.sub(r"@\w+|(_|\-|\.|\+|\#|\$|%|\^|&|\*|\(|\)|!|~|`|,|;|:|\"|\'|\?|/|<|>|\[|\]|\{|\}|=|\||\\)", " ", str(media.file_name))
-    file_name = re.sub(r"\s+", " ", file_name)    
-    
+    file_name = re.sub(r"[_\-\.#+$%^&*()!~`,;:\"'?/<>\[\]{}=|\\]", " ", str(media.file_name))
+    file_name = re.sub(r"\s+", " ", file_name).strip()    
     primary_db_size = await check_db_size(db, _db_stats_cache_primary)
     use_secondary = False
     saveMedia = Media
@@ -135,9 +134,9 @@ async def get_search_results(chat_id, query, file_type=None, max_results=10, off
     if not query:
         raw_pattern = '.'
     elif ' ' not in query:
-        raw_pattern = r'(\b|[\.\+\-_])' + query + r'(\b|[\.\+\-_])'
+        raw_pattern = r"(\b|[\.\+\-_])" + query + r"(\b|[\.\+\-_])"
     else:
-        raw_pattern = query.replace(' ', r'.*[\s\.\+\-_()]')
+        raw_pattern = query.replace(" ", r".*[\s\.\+\-_()\[\]]")
 
     try:
         regex = re.compile(raw_pattern, flags=re.IGNORECASE)
@@ -174,9 +173,9 @@ async def get_bad_files(query, file_type=None):
     if not query:
         raw_pattern = '.'
     elif ' ' not in query:
-        raw_pattern = r'(\b|[\.\+\-_])' + query + r'(\b|[\.\+\-_])'
+        raw_pattern = r"(\b|[\.\+\-_])" + query + r"(\b|[\.\+\-_])"
     else:
-        raw_pattern = query.replace(' ', r'.*[\s\.\+\-_()]')
+        raw_pattern = query.replace(" ", r".*[\s\.\+\-_()]")
     try:
         regex = re.compile(raw_pattern, flags=re.IGNORECASE)
     except:

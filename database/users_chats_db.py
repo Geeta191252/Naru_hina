@@ -402,6 +402,12 @@ class Database:
         else:
             return []
 
+    async def get_maintenance_status(self, bot_id):
+        return await self.get_bot_setting(bot_id, 'MAINTENANCE_MODE', MAINTENANCE_MODE)
+
+    async def update_maintenance_status(self, bot_id, enable):
+        await self.update_bot_setting(bot_id, 'MAINTENANCE_MODE', enable)
+
     async def pm_search_status(self, bot_id):
         return await self.get_bot_setting(bot_id, 'PM_SEARCH', PM_SEARCH)
 

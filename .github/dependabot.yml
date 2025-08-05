@@ -1,0 +1,19 @@
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "19:46"
+      timezone: "UTC"
+    ignore:
+      - dependency-name: "pyrofork"
+    labels:
+      - "dependencies"
+      - "auto-update"
+    reviewers:
+      - "NBBotz"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    security-updates: true

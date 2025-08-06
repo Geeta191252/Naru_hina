@@ -1,8 +1,8 @@
 pyrofork==2.3.45
 tgcrypto-pyrofork
 pymongo[srv]==4.11.1
-motor==3.7.1
-marshmallow==4.0.0
+motor==3.7.0
+marshmallow==3.26.1
 umongo
 requests
 bs4
@@ -12,7 +12,7 @@ datetime
 pytz
 aiohttp
 opencv-python-headless==4.8.1.78
-python-dotenv==1.1.1
+python-dotenv==0.21.1
 speedtest
 humanize
 Pillow
@@ -22,10 +22,9 @@ wheel
 ujson
 wget
 aiofiles
-dnspython==2.7.0
+dnspython==2.6.1
 python-decouple
 ffmpeg-python==0.2.0
 jinja2
 fuzzywuzzy
-python-Levenshtein==0.27.1
-
+python-Levenshtein==0.21.0 

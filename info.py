@@ -15,31 +15,31 @@ def is_enabled(value, default):
 
 
 SESSION = environ.get('SESSION', 'media_search')
-API_ID = int(environ.get('API_ID', ''))
-API_HASH = environ.get('API_HASH', '')
+API_ID = int(environ.get('API_ID', '25059287'))
+API_HASH = environ.get('API_HASH', '5e7701953107a273724b07f2beaf8f17')
 BOT_TOKEN = environ.get('BOT_TOKEN', "")
 
 CACHE_TIME = int(environ.get('CACHE_TIME', 300))
 USE_CAPTION_FILTER = bool(environ.get('USE_CAPTION_FILTER', True))
 
-PICS = (environ.get('PICS', 'https://i.ibb.co/ch3n9wsf/x.jpg')).split() 
-NOR_IMG = environ.get("NOR_IMG", "https://graph.org/file/62efbcc4e7580b76530ba.jpg")
-MELCOW_VID = environ.get("MELCOW_VID", "https://graph.org/file/e215d12bfd4fa2155e90e.mp4")
-SPELL_IMG = environ.get("SPELL_IMG", "https://graph.org/file/13702ae26fb05df52667c.jpg")
+PICS = (environ.get('PICS', 'https://graph.org/file/633cee565239e09ebfad6-caa583ca6633cbb913.jpg https://graph.org/file/53d5a195a4d314724ea9a-13cfc6ecb62ad142c0.jpg https://graph.org/file/6bf77aa8a7cb1763ccae2-650f8dcac7bc91fa53.jpg https://graph.org/file/de747b2ddc86c33f7ee03-416796a9dcd504aa20.jpg https://graph.org/file/3d8d477be51040c53854c-1f5e85f06e8fbe6e85.jpg https://graph.org/file/03d81c6f7829168f06898-88b857c5439bc28d44.jpg')).split() 
+NOR_IMG = environ.get("NOR_IMG", "https://graph.org/file/633cee565239e09ebfad6-caa583ca6633cbb913.jpg")
+MELCOW_VID = environ.get("MELCOW_VID", "https://graph.org/file/6bf77aa8a7cb1763ccae2-650f8dcac7bc91fa53.jpg")
+SPELL_IMG = environ.get("SPELL_IMG", "https://graph.org/file/1071053c0fef3b99f875a-7e98684fe2015e1dc4.jpg")
 SUBSCRIPTION = (environ.get('SUBSCRIPTION', 'https://telegra.ph/file/f983d857f3ce40795e4b8.jpg'))
-FSUB_IMG = (environ.get('FSUB_IMG', 'https://i.ibb.co/cShkPjcZ/x.jpg')).split() 
+FSUB_IMG = (environ.get('FSUB_IMG', 'https://graph.org/file/95cefa3272feec077b28a-78591fe27d4215c260.jpg')).split() 
 
-ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ.get('ADMINS', '').split()] 
-CHANNELS = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('CHANNELS', '-100').split()]
-LOG_CHANNEL = int(environ.get('LOG_CHANNEL', '-100'))  
-BIN_CHANNEL = int(environ.get('BIN_CHANNEL', '-100'))  
-MOVIE_UPDATE_CHANNEL = int(environ.get('MOVIE_UPDATE_CHANNEL', '-100'))  
-PREMIUM_LOGS = int(environ.get('PREMIUM_LOGS', '-100')) 
+ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ.get('ADMINS', '6964203412').split()] 
+CHANNELS = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('CHANNELS', '-1002153653982 -1002701318235 -1002623667730').split()]
+LOG_CHANNEL = int(environ.get('LOG_CHANNEL', '-1002583655280'))  
+BIN_CHANNEL = int(environ.get('BIN_CHANNEL', '-1002635477308'))  
+MOVIE_UPDATE_CHANNEL = int(environ.get('MOVIE_UPDATE_CHANNEL', '-'))  
+PREMIUM_LOGS = int(environ.get('PREMIUM_LOGS', '-1002596920866')) 
 auth_grp = environ.get('AUTH_GROUP')
 AUTH_GROUPS = [int(ch) for ch in auth_grp.split()] if auth_grp else None
-reqst_channel = environ.get('REQST_CHANNEL_ID', '-100') 
+reqst_channel = environ.get('REQST_CHANNEL_ID', '-1002655119999') 
 REQST_CHANNEL = int(reqst_channel) if reqst_channel and id_pattern.search(reqst_channel) else None
-support_chat_id = environ.get('SUPPORT_CHAT_ID', '-100') 
+support_chat_id = environ.get('SUPPORT_CHAT_ID', '-1002517228726') 
 SUPPORT_CHAT_ID = int(support_chat_id) if support_chat_id and id_pattern.search(support_chat_id) else None
 
 DATABASE_URI = environ.get('DATABASE_URI', "")

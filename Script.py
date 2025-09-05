@@ -24,7 +24,7 @@ class script(object):
 ᴀғᴛᴇʀ ᴛʜᴀᴛ, ᴛʀʏ ᴀᴄᴄᴇssɪɴɢ ᴛʜᴀᴛ ᴍᴏᴠɪᴇ ᴛʜᴇɴ, ᴄʟɪᴄᴋ ᴏɴ ᴛʜᴇ "ᴛʀʏ ᴀɢᴀɪɴ" ʙᴜᴛᴛᴏɴ.
     </b>"""
            
-    MULTI_STATUS_TXT = """<b><blockquote>╭────[ ᴅᴀᴛᴀʙᴀsᴇ 1 ]────⍟</b>
+    MULTI_STATUS_TXT = """<b><blockquote>╭────[ ᴅᴀᴛᴀʙᴀsᴇ 1 ]────⍟</blockquote></b>
 │
 ├⋟ ᴀʟʟ ᴜsᴇʀs ⋟ <code>{}</code>
 ├⋟ ᴀʟʟ ɢʀᴏᴜᴘs ⋟ <code>{}</code>
@@ -33,13 +33,13 @@ class script(object):
 ├⋟ ᴜsᴇᴅ sᴛᴏʀᴀɢᴇ ⋟ <code>{}</code>
 ├⋟ ꜰʀᴇᴇ sᴛᴏʀᴀɢᴇ ⋟ <code>{}</code>
 │
-<b>├────[ ᴅᴀᴛᴀʙᴀsᴇ 2 ]────⍟</b>   
+<b><blockquote>├────[ ᴅᴀᴛᴀʙᴀsᴇ 2 ]────⍟</blockquote></b>   
 │
 ├⋟ ᴀʟʟ ꜰɪʟᴇs ⋟ <code>{}</code>
 ├⋟ ꜱɪᴢᴇ ⋟ <code>{}</code>
 ├⋟ ꜰʀᴇᴇ ⋟ <code>{}</code>
 │
-<b>├────[ 🤖 ʙᴏᴛ ᴅᴇᴛᴀɪʟs 🤖 ]────⍟</b>   
+<b>├────[ 🔥 ʙᴏᴛ ᴅᴇᴛᴀɪʟs 🔥 ]────⍟</b>   
 │
 ├⋟ ᴜᴘᴛɪᴍᴇ ⋟ {}
 ├⋟ ʀᴀᴍ ⋟ <code>{}%</code>
@@ -58,13 +58,13 @@ class script(object):
 ├⋟ ᴜsᴇᴅ sᴛᴏʀᴀɢᴇ ⋟ <code>{}</code>
 ├⋟ ꜰʀᴇᴇ sᴛᴏʀᴀɢᴇ ⋟ <code>{}</code>
 │
-<b>├────[ 🤖 ʙᴏᴛ ᴅᴇᴛᴀɪʟs 🤖 ]────⍟</b>   
+<b><blockquote>├────[ 🔥 ʙᴏᴛ ᴅᴇᴛᴀɪʟs 🔥 ]────⍟ </blockquote></b>   
 │
 ├⋟ ᴜᴘᴛɪᴍᴇ ⋟ {}
 ├⋟ ʀᴀᴍ ⋟ <code>{}%</code>
 ├⋟ ᴄᴘᴜ ⋟ <code>{}%</code>   
 │
-<b>╰─────────────────────⍟</blockquotes></b>"""
+<b>╰─────────────────────⍟</b>"""
 
     EARN_INFO = """<b><i><blockquote>💸 ʜᴏᴡ ᴛᴏ ᴇᴀʀɴ ᴍᴏɴᴇʏ ʙʏ ᴛʜɪs ʙᴏᴛ - </blockquote>
 

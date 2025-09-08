@@ -99,7 +99,7 @@ async def start(client, message):
                     InlineKeyboardButton('ᴛʀᴇɴᴅɪɴɢ', callback_data="topsearch"),
                     InlineKeyboardButton('ᴜᴘɢʀᴀᴅᴇ', callback_data="premium"),
                 ],[
-                    InlineKeyboardButton('ᴅᴍᴄᴀ', callback_data='disclaimer'),
+                    InlineKeyboardButton('ᴅɪꜱᴄʟᴀɪᴍᴇʀ', callback_data='disclaimer'),
                     InlineKeyboardButton('ᴀʙᴏᴜᴛ', callback_data='me')
                 ],[
                     InlineKeyboardButton('ᴇᴀʀɴ ᴍᴏɴᴇʏ ᴡɪᴛʜ ʙᴏᴛ', callback_data="earn")
@@ -505,9 +505,9 @@ async def settings(client, message):
             return await message.reply_text('<b>ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀᴅᴍɪɴ ɪɴ ᴛʜɪꜱ ɢʀᴏᴜᴘ</b>')
         await db.connect_group(grp_id, user_id)
         btn = [[
-                InlineKeyboardButton("👤 ᴏᴘᴇɴ ɪɴ ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ 👤", callback_data=f"opnsetpm#{grp_id}")
+                InlineKeyboardButton(" ᴏᴘᴇɴ ɪɴ ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ ", callback_data=f"opnsetpm#{grp_id}")
               ],[
-                InlineKeyboardButton("👥 ᴏᴘᴇɴ ʜᴇʀᴇ 👥", callback_data=f"opnsetgrp#{grp_id}")
+                InlineKeyboardButton(" ᴏᴘᴇɴ ʜᴇʀᴇ ", callback_data=f"opnsetgrp#{grp_id}")
               ]]
         await message.reply_text(
                 text="<b>ᴡʜᴇʀᴇ ᴅᴏ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ᴏᴘᴇɴ ꜱᴇᴛᴛɪɴɢꜱ ᴍᴇɴᴜ ? ⚙️</b>",

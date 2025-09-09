@@ -29,11 +29,11 @@ SPELL_IMG = environ.get("SPELL_IMG", "https://graph.org/file/1071053c0fef3b99f87
 SUBSCRIPTION = (environ.get('SUBSCRIPTION', 'https://telegra.ph/file/f983d857f3ce40795e4b8.jpg'))
 FSUB_IMG = (environ.get('FSUB_IMG', 'https://graph.org/file/95cefa3272feec077b28a-78591fe27d4215c260.jpg')).split() 
 
-ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ.get('ADMINS', '6964203412').split()] 
+ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ.get('ADMINS', '6964203412 6965488457').split()] 
 CHANNELS = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('CHANNELS', '-1002153653982 -1002701318235 -1002623667730').split()]
-LOG_CHANNEL = int(environ.get('LOG_CHANNEL', '-1002583655280'))  
-BIN_CHANNEL = int(environ.get('BIN_CHANNEL', '-1002635477308'))  
-MOVIE_UPDATE_CHANNEL = int(environ.get('MOVIE_UPDATE_CHANNEL', '-1003081942933'))  
+LOG_CHANNEL = int(environ.get('LOG_CHANNEL', '-1002120758420'))  
+BIN_CHANNEL = int(environ.get('BIN_CHANNEL', '-1002444552703'))  
+MOVIE_UPDATE_CHANNEL = int(environ.get('MOVIE_UPDATE_CHANNEL', '-1002993363871'))  
 PREMIUM_LOGS = int(environ.get('PREMIUM_LOGS', '-1002596920866')) 
 auth_grp = environ.get('AUTH_GROUP')
 AUTH_GROUPS = [int(ch) for ch in auth_grp.split()] if auth_grp else None
@@ -56,8 +56,8 @@ CHNL_LNK = environ.get('CHNL_LNK', 'https://t.me/moviehub4u_update')
 OWNER_LNK = environ.get('OWNER_LNK', 'https://t.me/disscus_moviehub4u')
 UPDATE_CHANNEL_LNK = environ.get('UPDATE_CHANNEL_LNK', 'https://t.me/moviehub4u_update')
 
-AUTH_CHANNEL = environ.get("AUTH_CHANNEL", "-1002282783745 -1002393557941 -1002594005991") # add multiple channels here, separated by single space
-AUTH_REQ_CHANNEL = environ.get('AUTH_REQ_CHANNEL', '-1002377815135') # add multiple channels here, separated by single space
+AUTH_CHANNEL = environ.get("AUTH_CHANNEL", "-1002200226545, -1002926855756") # add multiple channels here, separated by single space
+AUTH_REQ_CHANNEL = environ.get('AUTH_REQ_CHANNEL', '') # add multiple channels here, separated by single space
 
 IS_VERIFY = is_enabled('IS_VERIFY', False)
 LOG_VR_CHANNEL = int(environ.get('LOG_VR_CHANNEL', '100'))

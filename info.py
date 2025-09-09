@@ -42,7 +42,7 @@ REQST_CHANNEL = int(reqst_channel) if reqst_channel and id_pattern.search(reqst_
 support_chat_id = environ.get('SUPPORT_CHAT_ID', '-1002517228726') 
 SUPPORT_CHAT_ID = int(support_chat_id) if support_chat_id and id_pattern.search(support_chat_id) else None
 
-DATABASE_URI = environ.get('DATABASE_URI', "mongodb+srv://hinata:hinata@cluster0.apfoz26.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+DATABASE_URI = environ.get('DATABASE_URI', "mongodb+srv://mmmmmehar191:P75xf2nybiVeqUuJ@cluster0.1t94pie.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 DATABASE_NAME = environ.get('DATABASE_NAME', "Cluster0")
 COLLECTION_NAME = environ.get('COLLECTION_NAME', 'SilentXBotz_files')
 
@@ -51,10 +51,10 @@ MULTIPLE_DB = is_enabled(os.environ.get('MULTIPLE_DB', "False"), False) # Type T
 DATABASE_URI2 = environ.get('DATABASE_URI2', "")
 DB_CHANGE_LIMIT = int(environ.get('DB_CHANGE_LIMIT', "432")) 
 
-GRP_LNK = environ.get('GRP_LNK', 'https://t.me/movie_group_bot_0')
-CHNL_LNK = environ.get('CHNL_LNK', 'https://t.me/moviehub4u_update')
+GRP_LNK = environ.get('GRP_LNK', 'https://t.me/movie_hd_hub15')
+CHNL_LNK = environ.get('CHNL_LNK', 'https://t.me/+tgPf04FXMOllMWVl')
 OWNER_LNK = environ.get('OWNER_LNK', 'https://t.me/disscus_moviehub4u')
-UPDATE_CHANNEL_LNK = environ.get('UPDATE_CHANNEL_LNK', 'https://t.me/moviehub4u_update')
+UPDATE_CHANNEL_LNK = environ.get('UPDATE_CHANNEL_LNK', 'https://t.me/+HzTOD3q60_4zMTBl')
 
 AUTH_CHANNEL = environ.get("AUTH_CHANNEL", "-1002200226545, -1002926855756") # add multiple channels here, separated by single space
 AUTH_REQ_CHANNEL = environ.get('AUTH_REQ_CHANNEL', '') # add multiple channels here, separated by single space
@@ -64,9 +64,9 @@ LOG_VR_CHANNEL = int(environ.get('LOG_VR_CHANNEL', '100'))
 LOG_API_CHANNEL = int(environ.get('LOG_API_CHANNEL', '-100'))
 VERIFY_IMG = environ.get("VERIFY_IMG", "https://telegra.ph/file/9ecc5d6e4df5b83424896.jpg")
 
-TUTORIAL = environ.get("TUTORIAL", "https://t.me/moviehub4u_update")
-TUTORIAL_2 = environ.get("TUTORIAL_2", "https://t.me/moviehub4u_update")
-TUTORIAL_3 = environ.get("TUTORIAL_3", "https://t.me/moviehub4u_update")
+TUTORIAL = environ.get("TUTORIAL", "https://t.me/+tgPf04FXMOllMWVl")
+TUTORIAL_2 = environ.get("TUTORIAL_2", "https://t.me/+tgPf04FXMOllMWVl")
+TUTORIAL_3 = environ.get("TUTORIAL_3", "https://t.me/+tgPf04FXMOllMWVl")
 
 SHORTENER_API = environ.get("SHORTENER_API", "")
 SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "")

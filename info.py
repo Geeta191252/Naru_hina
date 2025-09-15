@@ -33,7 +33,7 @@ ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ
 CHANNELS = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('CHANNELS', '-1002153653982 -1002701318235 -1002623667730').split()]
 LOG_CHANNEL = int(environ.get('LOG_CHANNEL', '-1002120758420'))  
 BIN_CHANNEL = int(environ.get('BIN_CHANNEL', '-1002444552703'))  
-MOVIE_UPDATE_CHANNEL = int(environ.get('MOVIE_UPDATE_CHANNEL', '-1002993363871'))  
+MOVIE_UPDATE_CHANNEL = int(environ.get('MOVIE_UPDATE_CHANNEL', '-1002200226545'))  
 PREMIUM_LOGS = int(environ.get('PREMIUM_LOGS', '-1002200226545')) 
 auth_grp = environ.get('AUTH_GROUP')
 AUTH_GROUPS = [int(ch) for ch in auth_grp.split()] if auth_grp else None
@@ -54,7 +54,7 @@ DB_CHANGE_LIMIT = int(environ.get('DB_CHANGE_LIMIT', "432"))
 GRP_LNK = environ.get('GRP_LNK', 'https://t.me/movie_hd_hub15')
 CHNL_LNK = environ.get('CHNL_LNK', 'https://t.me/+tgPf04FXMOllMWVl')
 OWNER_LNK = environ.get('OWNER_LNK', 'https://t.me/Movie2u_in')
-UPDATE_CHANNEL_LNK = environ.get('UPDATE_CHANNEL_LNK', 'https://t.me/+HzTOD3q60_4zMTBl')
+UPDATE_CHANNEL_LNK = environ.get('UPDATE_CHANNEL_LNK', 'https://t.me/+tgPf04FXMOllMWVl')
 
 AUTH_CHANNEL = environ.get("AUTH_CHANNEL", "-1002200226545 -1002926855756") # add multiple channels here, separated by single space
 AUTH_REQ_CHANNEL = environ.get('AUTH_REQ_CHANNEL', '') # add multiple channels here, separated by single space

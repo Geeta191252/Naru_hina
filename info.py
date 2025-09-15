@@ -53,7 +53,7 @@ DB_CHANGE_LIMIT = int(environ.get('DB_CHANGE_LIMIT', "432"))
 
 GRP_LNK = environ.get('GRP_LNK', 'https://t.me/movie_hd_hub15')
 CHNL_LNK = environ.get('CHNL_LNK', 'https://t.me/+tgPf04FXMOllMWVl')
-OWNER_LNK = environ.get('OWNER_LNK', 'https://t.me/disscus_moviehub4u')
+OWNER_LNK = environ.get('OWNER_LNK', 'https://t.me/Movie2u_in')
 UPDATE_CHANNEL_LNK = environ.get('UPDATE_CHANNEL_LNK', 'https://t.me/+HzTOD3q60_4zMTBl')
 
 AUTH_CHANNEL = environ.get("AUTH_CHANNEL", "-1002200226545 -1002926855756") # add multiple channels here, separated by single space
@@ -86,7 +86,7 @@ MAX_B_TN = environ.get("MAX_B_TN", "8")
 MAX_BTN = is_enabled((environ.get('MAX_BTN', "True")), True)
 PORT = environ.get("PORT", "8089")
 MSG_ALRT = environ.get('MSG_ALRT', 'Welcome to Hidden Leaf Village 🌿')
-SUPPORT_CHAT = environ.get('SUPPORT_CHAT', 'https://t.me/disscus_moviehub4u') 
+SUPPORT_CHAT = environ.get('SUPPORT_CHAT', 'https://t.me/Movie2u_in') 
 P_TTI_SHOW_OFF = is_enabled((environ.get('P_TTI_SHOW_OFF', "False")), False)
 IMDB = is_enabled((environ.get('IMDB', "False")), False)
 AUTO_FFILTER = is_enabled((environ.get('AUTO_FFILTER', "True")), True)

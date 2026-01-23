@@ -42,60 +42,103 @@ async def broadcast_users(bot, message):
 
     is_pin = silentxbotz_user_response.text == "Yes"
     b_msg = message.reply_to_message
-    users = [user async for user in await db.get_all_users()]
-    total_users = len(users)
+    total_users = await db.total_users_count()
     silentxbotz_status_msg = await message.reply_text("📤 <b>Broadcasting your message...</b>")
-    success = blocked = deleted = failed = 0
+    success = blocked = deleted = failed = done = 0
     start_time = time.time()
     cancelled = False
 
-    async def send(user):
+    async def send_single(user_id):
         try:
-            _, result = await users_broadcast(int(user["id"]), b_msg, is_pin)
+            _, result = await asyncio.wait_for(
+                users_broadcast(user_id, b_msg, is_pin),
+                timeout=10
+            )
             return result
+        except asyncio.TimeoutError:
+            return "Error"
         except Exception as e:
-            LOGGER.error(f"Error sending broadcast to {user['id']}")
+            LOGGER.error(f"Error sending broadcast to {user_id}: {e}")
             return "Error"
 
     async with lock:
-        for i in range(0, total_users, 25):
+        users_cursor = await db.get_all_users()
+        batch = []
+        async for user in users_cursor:
             if temp.B_USERS_CANCEL:
                 temp.B_USERS_CANCEL = False
                 cancelled = True
                 break
-            batch = users[i:i + 25]
-            results = await asyncio.gather(*[send(user) for user in batch], return_exceptions=True)
-
-            for res in results:
-                if isinstance(res, Exception):
-                    failed += 1
-                elif res == "Success":
-                    success += 1
-                elif res == "Blocked":
-                    blocked += 1
-                elif res == "Deleted":
-                    deleted += 1
-                elif res == "Error":
-                    failed += 1
-
-            done = i + len(batch)
-            elapsed = get_readable_time(time.time() - start_time)
+            
+            batch.append(int(user["id"]))
+            
+            if len(batch) >= 20:
+                try:
+                    results = await asyncio.wait_for(
+                        asyncio.gather(*[send_single(uid) for uid in batch], return_exceptions=True),
+                        timeout=60
+                    )
+                    for res in results:
+                        if isinstance(res, Exception):
+                            failed += 1
+                        elif res == "Success":
+                            success += 1
+                        elif res == "Blocked":
+                            blocked += 1
+                        elif res == "Deleted":
+                            deleted += 1
+                        else:
+                            failed += 1
+                except asyncio.TimeoutError:
+                    failed += len(batch)
+                    LOGGER.error(f"Batch timeout at {done}")
+                except Exception as e:
+                    failed += len(batch)
+                    LOGGER.error(f"Batch error: {e}")
+                
+                done += len(batch)
+                batch = []
+                
+                if done % 100 == 0:
+                    elapsed = get_readable_time(time.time() - start_time)
+                    try:
+                        await silentxbotz_status_msg.edit(
+                            f"📣 <b>Broadcast Progress....:</b>\n\n"
+                            f"👥 Total: <code>{total_users}</code>\n"
+                            f"✅ Done: <code>{done}</code>\n"
+                            f"📬 Success: <code>{success}</code>\n"
+                            f"⛔ Blocked: <code>{blocked}</code>\n"
+                            f"🗑️ Deleted: <code>{deleted}</code>\n"
+                            f"⏱️ Time: {elapsed}",
+                            reply_markup=InlineKeyboardMarkup([
+                                [InlineKeyboardButton("❌ CANCEL", callback_data="broadcast_cancel#users")]
+                            ])
+                        )
+                    except Exception:
+                        pass
+                await asyncio.sleep(1.5)
+        
+        if batch and not cancelled:
             try:
-                await silentxbotz_status_msg.edit(
-                    f"📣 <b>Broadcast Progress....:</b>\n\n"
-                    f"👥 Total: <code>{total_users}</code>\n"
-                    f"✅ Done: <code>{done}</code>\n"
-                    f"📬 Success: <code>{success}</code>\n"
-                    f"⛔ Blocked: <code>{blocked}</code>\n"
-                    f"🗑️ Deleted: <code>{deleted}</code>\n"
-                    f"⏱️ Time: {elapsed}",
-                    reply_markup=InlineKeyboardMarkup([
-                        [InlineKeyboardButton("❌ CANCEL", callback_data="broadcast_cancel#users")]
-                    ])
+                results = await asyncio.wait_for(
+                    asyncio.gather(*[send_single(uid) for uid in batch], return_exceptions=True),
+                    timeout=60
                 )
+                for res in results:
+                    if isinstance(res, Exception):
+                        failed += 1
+                    elif res == "Success":
+                        success += 1
+                    elif res == "Blocked":
+                        blocked += 1
+                    elif res == "Deleted":
+                        deleted += 1
+                    else:
+                        failed += 1
             except Exception:
-                pass
-            await asyncio.sleep(1)
+                failed += len(batch)
+            done += len(batch)
+
     elapsed = get_readable_time(time.time() - start_time)
     final_status = (
         f"{'❌ <b>Broadcast Cancelled.</b>' if cancelled else '✅ <b>Broadcast Completed.</b>'}\n\n"

@@ -1317,22 +1317,33 @@ async def forceadd_status_cmd(client, message):
 # Track new members added by users (direct add)
 @Client.on_message(filters.group & filters.new_chat_members)
 async def track_new_members(client, message):
+    import logging
+    logger = logging.getLogger(__name__)
+    
     chat_id = message.chat.id
+    logger.info(f"[DirectAdd] New members event in chat {chat_id}")
     
     if not await db.is_forceadd_enabled(chat_id):
+        logger.info(f"[DirectAdd] ForceAdd not enabled in {chat_id}")
         return
     
     adder = message.from_user
+    logger.info(f"[DirectAdd] Adder: {adder}")
+    
     if not adder:
+        logger.info(f"[DirectAdd] No adder found, skipping")
         return
     
+    logger.info(f"[DirectAdd] new_chat_members: {message.new_chat_members}")
     new_members = [m for m in message.new_chat_members if not m.is_bot and m.id != adder.id]
     added_count = len(new_members)
+    logger.info(f"[DirectAdd] Adder {adder.id} added {added_count} members: {[m.id for m in new_members]}")
     
     if added_count > 0:
         await db.increment_user_add_count(chat_id, adder.id, added_count)
         current = await db.get_user_add_count(chat_id, adder.id)
         required = await db.get_forceadd_count(chat_id)
+        logger.info(f"[DirectAdd] Updated count for {adder.id}: {current}/{required}")
         
         if current >= required:
             await message.reply_text(
@@ -1347,9 +1358,11 @@ async def track_new_members(client, message):
                 f"ʏᴏᴜ ʜᴀᴠᴇ ᴀᴅᴅᴇᴅ {current}/{required} ᴍᴇᴍʙᴇʀꜱ.\n"
                 f"📌 ᴀᴅᴅ {remaining} ᴍᴏʀᴇ ᴛᴏ ꜱᴇᴀʀᴄʜ ꜰᴏʀ ᴍᴏᴠɪᴇꜱ."
             )
+    else:
+        logger.info(f"[DirectAdd] No valid members to count (self-join or bots)")
 
 
-# Track members who join via invite links
+# Track members who join via invite links OR added directly by another user
 @Client.on_chat_member_updated(filters.group)
 async def track_invite_link_joins(client, chat_member_updated):
     import logging
@@ -1364,7 +1377,6 @@ async def track_invite_link_joins(client, chat_member_updated):
     old_member = chat_member_updated.old_chat_member
     
     logger.info(f"[ForceAdd] Chat member update in {chat_id}")
-    logger.info(f"[ForceAdd] Old: {old_member}, New: {new_member}")
     
     if not new_member:
         return
@@ -1372,41 +1384,75 @@ async def track_invite_link_joins(client, chat_member_updated):
     old_status = old_member.status.value if old_member and hasattr(old_member.status, 'value') else (old_member.status if old_member else "none")
     new_status = new_member.status.value if hasattr(new_member.status, 'value') else new_member.status
     
-    logger.info(f"[ForceAdd] Old status: {old_status}, New status: {new_status}")
+    logger.info(f"[ForceAdd] Old: {old_status}, New: {new_status}")
     
     is_new_join = (not old_member or old_status in ["left", "banned", "restricted", "kicked"]) and new_status == "member"
     
-    if is_new_join:
-        invite_link = chat_member_updated.invite_link
-        logger.info(f"[ForceAdd] Invite link obj: {invite_link}")
+    if not is_new_join:
+        return
+    
+    if new_member.user.is_bot:
+        return
+    
+    joined_user = new_member.user
+    invite_link = chat_member_updated.invite_link
+    adder = chat_member_updated.from_user
+    
+    logger.info(f"[ForceAdd] Joined: {joined_user.id}, Adder: {adder}, Invite: {invite_link}")
+    
+    if invite_link:
+        link_str = invite_link.invite_link
+        logger.info(f"[ForceAdd] Invite link used: {link_str}")
+        inviter_id = await db.get_user_by_invite_link(chat_id, link_str)
+        logger.info(f"[ForceAdd] Found inviter from DB: {inviter_id}")
         
-        if invite_link:
-            link_str = invite_link.invite_link
-            logger.info(f"[ForceAdd] Invite link used: {link_str}")
-            inviter_id = await db.get_user_by_invite_link(chat_id, link_str)
-            logger.info(f"[ForceAdd] Found inviter: {inviter_id}")
+        if inviter_id:
+            await db.increment_user_add_count(chat_id, inviter_id, 1)
+            current = await db.get_user_add_count(chat_id, inviter_id)
+            required = await db.get_forceadd_count(chat_id)
             
-            if inviter_id and not new_member.user.is_bot:
-                await db.increment_user_add_count(chat_id, inviter_id, 1)
-                current = await db.get_user_add_count(chat_id, inviter_id)
-                required = await db.get_forceadd_count(chat_id)
-                
-                try:
-                    inviter = await client.get_users(inviter_id)
-                    if current >= required:
-                        await client.send_message(
-                            chat_id,
-                            f"🎉 <b>ᴛʜᴀɴᴋꜱ {inviter.mention}!</b>\n\n"
-                            f"ꜱᴏᴍᴇᴏɴᴇ ᴊᴏɪɴᴇᴅ ᴠɪᴀ ʏᴏᴜʀ ʟɪɴᴋ! ({current}/{required})\n"
-                            f"✅ ʏᴏᴜ ᴄᴀɴ ɴᴏᴡ ꜱᴇᴀʀᴄʜ ꜰᴏʀ ᴍᴏᴠɪᴇꜱ!"
-                        )
-                    else:
-                        remaining = required - current
-                        await client.send_message(
-                            chat_id,
-                            f"👍 <b>ɢᴏᴏᴅ ᴊᴏʙ {inviter.mention}!</b>\n\n"
-                            f"ꜱᴏᴍᴇᴏɴᴇ ᴊᴏɪɴᴇᴅ ᴠɪᴀ ʏᴏᴜʀ ʟɪɴᴋ! ({current}/{required})\n"
-                            f"📌 {remaining} ᴍᴏʀᴇ ᴛᴏ ᴜɴʟᴏᴄᴋ ꜱᴇᴀʀᴄʜ."
-                        )
-                except Exception as e:
-                    logger.error(f"[ForceAdd] Error notifying inviter: {e}")
+            try:
+                inviter = await client.get_users(inviter_id)
+                if current >= required:
+                    await client.send_message(
+                        chat_id,
+                        f"🎉 <b>ᴛʜᴀɴᴋꜱ {inviter.mention}!</b>\n\n"
+                        f"ꜱᴏᴍᴇᴏɴᴇ ᴊᴏɪɴᴇᴅ ᴠɪᴀ ʏᴏᴜʀ ʟɪɴᴋ! ({current}/{required})\n"
+                        f"✅ ʏᴏᴜ ᴄᴀɴ ɴᴏᴡ ꜱᴇᴀʀᴄʜ ꜰᴏʀ ᴍᴏᴠɪᴇꜱ!"
+                    )
+                else:
+                    remaining = required - current
+                    await client.send_message(
+                        chat_id,
+                        f"👍 <b>ɢᴏᴏᴅ ᴊᴏʙ {inviter.mention}!</b>\n\n"
+                        f"ꜱᴏᴍᴇᴏɴᴇ ᴊᴏɪɴᴇᴅ ᴠɪᴀ ʏᴏᴜʀ ʟɪɴᴋ! ({current}/{required})\n"
+                        f"📌 {remaining} ᴍᴏʀᴇ ᴛᴏ ᴜɴʟᴏᴄᴋ ꜱᴇᴀʀᴄʜ."
+                    )
+            except Exception as e:
+                logger.error(f"[ForceAdd] Error notifying inviter: {e}")
+    
+    elif adder and adder.id != joined_user.id:
+        logger.info(f"[ForceAdd] Direct add detected! Adder: {adder.id}, Added: {joined_user.id}")
+        await db.increment_user_add_count(chat_id, adder.id, 1)
+        current = await db.get_user_add_count(chat_id, adder.id)
+        required = await db.get_forceadd_count(chat_id)
+        logger.info(f"[ForceAdd] Updated count for {adder.id}: {current}/{required}")
+        
+        try:
+            if current >= required:
+                await client.send_message(
+                    chat_id,
+                    f"🎉 <b>ᴛʜᴀɴᴋꜱ {adder.mention}!</b>\n\n"
+                    f"ʏᴏᴜ ᴀᴅᴅᴇᴅ ᴀ ᴍᴇᴍʙᴇʀ! ({current}/{required})\n"
+                    f"✅ ʏᴏᴜ ᴄᴀɴ ɴᴏᴡ ꜱᴇᴀʀᴄʜ ꜰᴏʀ ᴍᴏᴠɪᴇꜱ!"
+                )
+            else:
+                remaining = required - current
+                await client.send_message(
+                    chat_id,
+                    f"👍 <b>ɢᴏᴏᴅ ᴊᴏʙ {adder.mention}!</b>\n\n"
+                    f"ʏᴏᴜ ᴀᴅᴅᴇᴅ ᴀ ᴍᴇᴍʙᴇʀ! ({current}/{required})\n"
+                    f"📌 {remaining} ᴍᴏʀᴇ ᴛᴏ ᴜɴʟᴏᴄᴋ ꜱᴇᴀʀᴄʜ."
+                )
+        except Exception as e:
+            logger.error(f"[ForceAdd] Error notifying adder: {e}")

@@ -23,54 +23,128 @@ async def broadcast_cancel(bot, query):
         temp.B_GROUPS_CANCEL = True
         await query.message.edit("🛑 ᴛʀʏɪɴɢ ᴛᴏ ᴄᴀɴᴄᴇʟ ɢʀᴏᴜᴘꜱ ʙʀᴏᴀᴅᴄᴀꜱᴛɪɴɢ...")
 
+BATCH_SIZE = 2000
+broadcast_cache = {}
+
 @Client.on_message(filters.command("broadcast") & filters.user(ADMINS) & filters.reply)
 async def broadcast_users(bot, message):
     if lock.locked():
         return await message.reply("⚠️ Another broadcast is in progress. Please wait...")
-    ask = await message.reply(
-        "<b>Do you want to pin this message in users?</b>",
-        reply_markup=ReplyKeyboardMarkup([["Yes", "No"]], one_time_keyboard=True, resize_keyboard=True)
-    )
-    try:
-        silentxbotz_user_response = await bot.listen(chat_id=message.chat.id, user_id=message.from_user.id, timeout=60)
-    except asyncio.TimeoutError:
-        await ask.delete()
-        return await message.reply("❌ Timed out. Broadcast cancelled.")
-    await ask.delete()
-    if silentxbotz_user_response.text not in ("Yes", "No"):
-        return await message.reply("❌ Invalid input. Broadcast cancelled.")
-
-    is_pin = silentxbotz_user_response.text == "Yes"
-    b_msg = message.reply_to_message
+    
+    broadcast_cache[message.from_user.id] = {
+        "message": message.reply_to_message
+    }
+    
     total_users = await db.total_users_count()
-    silentxbotz_status_msg = await message.reply_text("📤 <b>Broadcasting your message...</b>")
+    total_batches = (total_users + BATCH_SIZE - 1) // BATCH_SIZE
+    
+    batch_buttons = []
+    for i in range(total_batches):
+        start = i * BATCH_SIZE + 1
+        end = min((i + 1) * BATCH_SIZE, total_users)
+        batch_buttons.append([
+            InlineKeyboardButton(f"📦 Batch {i+1}: {start}-{end}", callback_data=f"bcast_batch#{i}")
+        ])
+    batch_buttons.append([InlineKeyboardButton("📢 All Users", callback_data="bcast_batch#all")])
+    
+    await message.reply(
+        f"<b>📊 Total Users: {total_users}</b>\n"
+        f"<b>📦 Batches: {total_batches} (2000 users each)</b>\n\n"
+        f"Select which batch to broadcast:",
+        reply_markup=InlineKeyboardMarkup(batch_buttons)
+    )
+
+@Client.on_callback_query(filters.regex(r'^bcast_batch#'))
+async def broadcast_batch_select(bot, query):
+    user_id = query.from_user.id
+    if user_id not in ADMINS:
+        return await query.answer("❌ Not authorized!", show_alert=True)
+    
+    if user_id not in broadcast_cache or "message" not in broadcast_cache[user_id]:
+        return await query.answer("❌ Session expired. Use /broadcast again.", show_alert=True)
+    
+    _, batch_id = query.data.split("#", 1)
+    broadcast_cache[user_id]["batch"] = batch_id
+    
+    await query.message.edit(
+        "<b>📌 Do you want to pin this message?</b>",
+        reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton("✅ Yes", callback_data="bcast_pin#yes"),
+             InlineKeyboardButton("❌ No", callback_data="bcast_pin#no")]
+        ])
+    )
+
+@Client.on_callback_query(filters.regex(r'^bcast_pin#'))
+async def broadcast_pin_select(bot, query):
+    user_id = query.from_user.id
+    if user_id not in ADMINS:
+        return await query.answer("❌ Not authorized!", show_alert=True)
+    
+    if user_id not in broadcast_cache:
+        return await query.answer("❌ Session expired. Use /broadcast again.", show_alert=True)
+    
+    if lock.locked():
+        return await query.answer("⚠️ Another broadcast in progress!", show_alert=True)
+    
+    _, pin_choice = query.data.split("#", 1)
+    is_pin = pin_choice == "yes"
+    cached = broadcast_cache.pop(user_id)
+    batch_id = cached["batch"]
+    b_msg = cached["message"]
+    
+    total_users = await db.total_users_count()
+    
+    if batch_id == "all":
+        start_idx = 0
+        end_idx = total_users
+        batch_label = "All Users"
+    else:
+        batch_num = int(batch_id)
+        start_idx = batch_num * BATCH_SIZE
+        end_idx = min((batch_num + 1) * BATCH_SIZE, total_users)
+        batch_label = f"Batch {batch_num + 1} ({start_idx + 1}-{end_idx})"
+    
+    await query.message.delete()
+    silentxbotz_status_msg = await bot.send_message(
+        query.message.chat.id,
+        f"📤 <b>Broadcasting to {batch_label}...</b>"
+    )
+    
     success = blocked = deleted = failed = done = 0
     start_time = time.time()
     cancelled = False
+    current_idx = 0
 
-    async def send_single(user_id):
+    async def send_single(uid):
         try:
             _, result = await asyncio.wait_for(
-                users_broadcast(user_id, b_msg, is_pin),
+                users_broadcast(uid, b_msg, is_pin),
                 timeout=10
             )
             return result
         except asyncio.TimeoutError:
             return "Error"
         except Exception as e:
-            LOGGER.error(f"Error sending broadcast to {user_id}: {e}")
+            LOGGER.error(f"Error sending broadcast to {uid}: {e}")
             return "Error"
 
     async with lock:
         users_cursor = await db.get_all_users()
         batch = []
         async for user in users_cursor:
+            if current_idx < start_idx:
+                current_idx += 1
+                continue
+            if current_idx >= end_idx:
+                break
+            
             if temp.B_USERS_CANCEL:
                 temp.B_USERS_CANCEL = False
                 cancelled = True
                 break
             
             batch.append(int(user["id"]))
+            current_idx += 1
             
             if len(batch) >= 20:
                 try:
@@ -103,8 +177,8 @@ async def broadcast_users(bot, message):
                     elapsed = get_readable_time(time.time() - start_time)
                     try:
                         await silentxbotz_status_msg.edit(
-                            f"📣 <b>Broadcast Progress....:</b>\n\n"
-                            f"👥 Total: <code>{total_users}</code>\n"
+                            f"📣 <b>Broadcast Progress ({batch_label}):</b>\n\n"
+                            f"👥 Target: <code>{end_idx - start_idx}</code>\n"
                             f"✅ Done: <code>{done}</code>\n"
                             f"📬 Success: <code>{success}</code>\n"
                             f"⛔ Blocked: <code>{blocked}</code>\n"
@@ -142,8 +216,9 @@ async def broadcast_users(bot, message):
     elapsed = get_readable_time(time.time() - start_time)
     final_status = (
         f"{'❌ <b>Broadcast Cancelled.</b>' if cancelled else '✅ <b>Broadcast Completed.</b>'}\n\n"
+        f"📦 {batch_label}\n"
         f"🕒 Time: {elapsed}\n"
-        f"👥 Total: <code>{total_users}</code>\n"
+        f"👥 Target: <code>{end_idx - start_idx}</code>\n"
         f"📬 Success: <code>{success}</code>\n"
         f"⛔ Blocked: <code>{blocked}</code>\n"
         f"🗑️ Deleted: <code>{deleted}</code>\n"
@@ -178,12 +253,12 @@ async def grp_broadcast_pin_callback(bot, query):
         return await query.answer("❌ You are not authorized!", show_alert=True)
     if user_id not in grp_broadcast_cache:
         return await query.answer("❌ Session expired. Please use /grp_broadcast again.", show_alert=True)
-    
+
     _, choice = query.data.split("#", 1)
     is_pin = choice == "yes"
     cached = grp_broadcast_cache.pop(user_id)
     b_msg = cached["message"]
-    
+
     await query.message.delete()
     chats = await db.get_all_chats()
     total_chats = await db.total_chat_count()

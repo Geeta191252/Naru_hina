@@ -1,0 +1,55 @@
+[23-Jan-26 09:58:30 PM] [INFO] - Initalizing Your Bot!
+[23-Jan-26 09:58:36 PM] [INFO] - No additional clients found, using default client
+[23-Jan-26 09:58:36 PM] [INFO] - Import Plugins - Premium
+[23-Jan-26 09:58:36 PM] [INFO] - Import Plugins - __init__
+[23-Jan-26 09:58:36 PM] [INFO] - Import Plugins - banned
+[23-Jan-26 09:58:36 PM] [INFO] - Import Plugins - extra
+[23-Jan-26 09:58:36 PM] [INFO] - Import Plugins - index
+[23-Jan-26 09:58:36 PM] [INFO] - Import Plugins - join_req
+[23-Jan-26 09:58:36 PM] [INFO] - Import Plugins - license
+[23-Jan-26 09:58:36 PM] [INFO] - Import Plugins - misc
+[23-Jan-26 09:58:36 PM] [INFO] - Import Plugins - route
+[23-Jan-26 09:58:36 PM] [INFO] - Import Plugins - broadcast
+[23-Jan-26 09:58:36 PM] [INFO] - Import Plugins - p_ttishow
+[23-Jan-26 09:58:36 PM] [INFO] - Import Plugins - channel
+[23-Jan-26 09:58:36 PM] [INFO] - Import Plugins - commands
+[23-Jan-26 09:58:36 PM] [INFO] - Import Plugins - pm_filter
+[23-Jan-26 09:58:37 PM] [INFO] - Multiple Database Mode On. Now Files Will Be Save In Second DB If First DB Is Full
+[23-Jan-26 09:58:37 PM] [INFO] - Ftmbgh with Pyrogram v2.3.45 (Layer 187) started on Xfxvinbbot.
+[23-Jan-26 09:58:37 PM] [INFO] - 
+  ____  _ _            _  __  ______        _       
+ / ___|(_) | ___ _ __ | |_\ \/ / __ )  ___ | |_ ____
+ \___ \| | |/ _ \ '_ \| __|\  /|  _ \ / _ \| __|_  /
+  ___) | | |  __/ | | | |_ /  \| |_) | (_) | |_ / / 
+ |____/|_|_|\___|_| |_|\__/_/\_\____/ \___/ \__/___|
+                                                                                                                                                                            
+𝙱𝙾𝚃 𝚆𝙾𝚁𝙺𝙸𝙽𝙶 𝙿𝚁𝙾𝙿𝙴𝚁𝙻𝚈....
+[23-Jan-26 09:58:47 PM] [INFO] - ✅ Ping Successful
+[23-Jan-26 10:00:01 PM] [INFO] - Stop signal received (SIGTERM). Exiting...
+[23-Jan-26 10:00:03 PM] [INFO] - Initalizing Your Bot!
+[23-Jan-26 10:00:04 PM] [INFO] - No additional clients found, using default client
+[23-Jan-26 10:00:04 PM] [INFO] - Import Plugins - Premium
+[23-Jan-26 10:00:04 PM] [INFO] - Import Plugins - __init__
+[23-Jan-26 10:00:04 PM] [INFO] - Import Plugins - banned
+[23-Jan-26 10:00:04 PM] [INFO] - Import Plugins - extra
+[23-Jan-26 10:00:04 PM] [INFO] - Import Plugins - index
+[23-Jan-26 10:00:04 PM] [INFO] - Import Plugins - join_req
+[23-Jan-26 10:00:04 PM] [INFO] - Import Plugins - license
+[23-Jan-26 10:00:04 PM] [INFO] - Import Plugins - misc
+[23-Jan-26 10:00:04 PM] [INFO] - Import Plugins - route
+[23-Jan-26 10:00:04 PM] [INFO] - Import Plugins - p_ttishow
+[23-Jan-26 10:00:04 PM] [INFO] - Import Plugins - channel
+[23-Jan-26 10:00:04 PM] [INFO] - Import Plugins - commands
+[23-Jan-26 10:00:04 PM] [INFO] - Import Plugins - pm_filter
+[23-Jan-26 10:00:04 PM] [INFO] - Import Plugins - broadcast
+[23-Jan-26 10:00:05 PM] [INFO] - Multiple Database Mode On. Now Files Will Be Save In Second DB If First DB Is Full
+[23-Jan-26 10:00:05 PM] [INFO] - Ftmbgh with Pyrogram v2.3.45 (Layer 187) started on Xfxvinbbot.
+[23-Jan-26 10:00:05 PM] [INFO] - 
+  ____  _ _            _  __  ______        _       
+ / ___|(_) | ___ _ __ | |_\ \/ / __ )  ___ | |_ ____
+ \___ \| | |/ _ \ '_ \| __|\  /|  _ \ / _ \| __|_  /
+  ___) | | |  __/ | | | |_ /  \| |_) | (_) | |_ / / 
+ |____/|_|_|\___|_| |_|\__/_/\_\____/ \___/ \__/___|
+                                                                                                                                                                            
+𝙱𝙾𝚃 𝚆𝙾𝚁𝙺𝙸𝙽𝙶 𝙿𝚁𝙾𝙿𝙴𝚁𝙻𝚈....
+[23-Jan-26 10:00:15 PM] [INFO] - ✅ Ping Successful

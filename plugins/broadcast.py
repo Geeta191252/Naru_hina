@@ -112,7 +112,7 @@ async def broadcast_pin_select(bot, query):
 
                 done += 1
 
-                if done % 100 == 0:
+                if done % 25 == 0:
                     elapsed = get_readable_time(time.time() - start_time)
                     try:
                         await asyncio.wait_for(

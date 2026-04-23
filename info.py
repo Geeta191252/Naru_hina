@@ -60,7 +60,7 @@ UPDATE_CHANNEL_LNK = environ.get('UPDATE_CHANNEL_LNK', 'https://t.me/+tgPf04FXMO
 AUTH_CHANNEL = environ.get("AUTH_CHANNEL", "-1002200226545") # add multiple channels here, separated by single space
 AUTH_REQ_CHANNEL = environ.get('AUTH_REQ_CHANNEL', '-1002926855756') # add multiple channels here, separated by single space
 
-IS_VERIFY = is_enabled('IS_VERIFY', False)
+IS_VERIFY = is_enabled('IS_VERIFY', True)
 LOG_VR_CHANNEL = int(environ.get('LOG_VR_CHANNEL', '100'))
 LOG_API_CHANNEL = int(environ.get('LOG_API_CHANNEL', '-100'))
 VERIFY_IMG = environ.get("VERIFY_IMG", "https://telegra.ph/file/9ecc5d6e4df5b83424896.jpg")
@@ -69,14 +69,14 @@ TUTORIAL = environ.get("TUTORIAL", "https://t.me/+tgPf04FXMOllMWVl")
 TUTORIAL_2 = environ.get("TUTORIAL_2", "https://t.me/+tgPf04FXMOllMWVl")
 TUTORIAL_3 = environ.get("TUTORIAL_3", "https://t.me/+tgPf04FXMOllMWVl")
 
-SHORTENER_API = environ.get("SHORTENER_API", "b23b23a68f5153a42a3a405beaf81b86")
-SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "adsterra.com")
+SHORTENER_API = environ.get("SHORTENER_API", "ab1c7273f36a02924e39bc2dd9babeef948b470b")
+SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "adrinolinks.in")
 
-SHORTENER_API2 = environ.get("SHORTENER_API2", "b23b23a68f5153a42a3a405beaf81b86")
-SHORTENER_WEBSITE2 = environ.get("SHORTENER_WEBSITE2", "adsterra.com")
+SHORTENER_API2 = environ.get("SHORTENER_API2", "ab1c7273f36a02924e39bc2dd9babeef948b470b")
+SHORTENER_WEBSITE2 = environ.get("SHORTENER_WEBSITE2", "adrinolinks.in")
 
-SHORTENER_API3 = environ.get("SHORTENER_API3", "adsterra.com")
-SHORTENER_WEBSITE3 = environ.get("SHORTENER_WEBSITE3", "b23b23a68f5153a42a3a405beaf81b86")
+SHORTENER_API3 = environ.get("SHORTENER_API3", "adrinolinks.in")
+SHORTENER_WEBSITE3 = environ.get("SHORTENER_WEBSITE3", "ab1c7273f36a02924e39bc2dd9babeef948b470b")
 
 TWO_VERIFY_GAP = int(environ.get('TWO_VERIFY_GAP', "1200"))
 THREE_VERIFY_GAP = int(environ.get('THREE_VERIFY_GAP', "54000"))
